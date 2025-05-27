@@ -1,0 +1,503 @@
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:08:53	0	1	0	0	0	0	0	0	
+
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,31,192.168.18.232,13,40,12,4,11110,0,4,0
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:12:18	0	1	0	0	0	0	0	0	
+
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,32,192.168.18.232,13,40,12,4,11110,0,4,0
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:12:50	0	1	0	0	0	0	0	0	
+
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,33,192.168.18.232,13,40,12,4,11110,0,4,0
+ZKTeco POST: SN=VGU6243900035, Table=OPERLOG
+Raw:
+OPLOG 4	0	2025-05-27 12:13:04	0	0	0	0
+
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:15:52	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=12, timestamp=2025-05-27 12:15:52, status=0
+Found staff user_obj: prabeshdon
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,34,192.168.18.232,13,40,12,4,11110,0,4,0
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/img/icon-deletelink.svg
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/img/icon-deletelink.svg
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/img/icon-changelink.svg
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/css/dashboard.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/css/dashboard.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/changelists.css
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/js/filters.js
+Not Found: /static/admin/css/changelists.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/css/responsive.css
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+1	2025-05-27 12:19:03	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=1, timestamp=2025-05-27 12:19:03, status=0
+User with ID 1 not found in staff or student.
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:19:25	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=12, timestamp=2025-05-27 12:19:25, status=0
+Found staff user_obj: prabeshdon
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,36,192.168.18.232,13,40,12,4,11110,0,4,0
+Unauthorized: /api/update-fcm-token/
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/changelists.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/filters.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/changelists.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/filters.js
+Not Found: /static/admin/css/responsive.css
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+1	2025-05-27 12:21:44	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=1, timestamp=2025-05-27 12:21:44, status=0
+User with ID 1 not found in staff or student.
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/img/icon-changelink.svg
+Not Found: /static/admin/img/icon-addlink.svg
+Not Found: /static/admin/img/icon-viewlink.svg
+Not Found: /static/admin/js/change_form.js
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,37,192.168.18.232,13,40,12,4,11110,0,4,0
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/nav_sidebar.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/css/nav_sidebar.css
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/css/dark_mode.css
+Not Found: /static/admin/css/base.css
+Not Found: /static/admin/js/theme.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/css/forms.css
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Not Found: /static/admin/js/vendor/jquery/jquery.js
+Not Found: /static/admin/js/jquery.init.js
+Not Found: /static/admin/js/core.js
+Not Found: /static/admin/js/admin/RelatedObjectLookups.js
+Not Found: /static/admin/js/actions.js
+Not Found: /static/admin/js/urlify.js
+Not Found: /static/admin/js/prepopulate.js
+Not Found: /static/admin/js/vendor/xregexp/xregexp.js
+Not Found: /static/admin/css/responsive.css
+Not Found: /static/admin/js/change_form.js
+Not Found: /static/admin/js/prepopulate_init.js
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+12	2025-05-27 12:25:46	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=12, timestamp=2025-05-27 12:25:46, status=0
+Found staff user_obj: prabeshdon
+Body: Staff prabesh timilsina checked in at 12:25:46
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,38,192.168.18.232,13,40,12,4,11110,0,4,0
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+ZKTeco POST: SN=VGU6243900035, Table=ATTLOG
+Raw:
+6	2025-05-27 12:40:54	0	1	0	0	0	0	0	0	
+
+Parsing line: user_id=6, timestamp=2025-05-27 12:40:54, status=0
+Found staff user_obj: laxmi
+Body: Staff laxmi devkota checked in at 12:40:54
+Device Connected: SN=VGU6243900035, INFO=ZAM70-NF28VA-Ver1.0.23,7,7,39,192.168.18.232,13,40,12,4,11110,0,4,0
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /static/drf-yasg/swagger-ui-dist/favicon-32x32.png
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /
+ZKTeco POST: SN=VGU6243900035, Table=OPERLOG
+Raw:
+OPLOG 4	0	2025-05-27 12:46:04	0	0	0	0
+
+Device Connected: SN=VGU6243900035, INFO=None
+Not Found: /
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Device Connected: SN=VGU6243900035, INFO=None
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "D:\attendance.alsamainternational.com\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\attendance.alsamainternational.com\venv\Lib\site-packages\django\utils\deprecation.py", line 119, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\attendance.alsamainternational.com\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\attendance.alsamainternational.com\venv\Lib\site-packages\django\http\request.py", line 186, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Bad Request: /
+"GET / HTTP/1.1" 400 74896
+D:\attendance.alsamainternational.com\attendence\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /
+"GET / HTTP/1.1" 404 3166
+Not Found: /favicon.ico
+- Broken pipe from ('127.0.0.1', 50630)
+"GET /swagger/ HTTP/1.1" 200 1630
+- Broken pipe from ('127.0.0.1', 50673)
+- Broken pipe from ('127.0.0.1', 50676)
+- Broken pipe from ('127.0.0.1', 50675)
+- Broken pipe from ('127.0.0.1', 50677)
+"GET /swagger/?format=openapi HTTP/1.1" 200 5651

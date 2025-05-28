@@ -1,0 +1,6 @@
+deployment:
+  tasks:
+    - export GIT_WORK_TREE=/home/alsamain/attendance.alsamaininternational.com
+    - export GIT_DIR=/home/alsamain/attendance.alsamaininternational.com/.git
+    - git reset --hard
+    - echo "Deployment done on $(date)"

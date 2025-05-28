@@ -91,31 +91,37 @@ TEMPLATES = [
 ]
 
 import os
-
+import sys
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
 
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'app.log'),
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'verbose',
+        },
+    },
+
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
         },
     },
 
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'INFO',
-            'propagate': True,
         },
-        'core': {  # Replace with your actual app name if different
-            'handlers': ['file'],
+        'core': {  # your custom logger used in process_attendance_data
+            'handlers': ['console'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
-    },
+    }
 }
 
 

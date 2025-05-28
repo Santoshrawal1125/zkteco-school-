@@ -6,6 +6,7 @@ from fcm.send_fcm import send_fcm_notification
 
 logger = logging.getLogger('core')  # Make sure your logging config uses this name
 
+
 def process_attendance_data(post_data, device_sn):
     logger.info(f"🚀 Called process_attendance_data with device_sn={device_sn} and post_data:\n{post_data}")
 

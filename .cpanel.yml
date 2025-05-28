@@ -1,6 +1,11 @@
+---
 deployment:
   tasks:
     - export GIT_WORK_TREE=/home/alsamain/attendance.alsamaininternational.com
     - export GIT_DIR=/home/alsamain/attendance.alsamaininternational.com/.git
     - git reset --hard
-    - echo "Deployment done on $(date)"
+    - /usr/local/bin/python3.11 -m venv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - python manage.py migrate
+    - python manage.py collectstatic --noinput

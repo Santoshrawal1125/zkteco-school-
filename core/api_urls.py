@@ -1,6 +1,6 @@
 from django.urls import path
 from .api_views import StaffBySchoolDepartment, DepartmentBySchool, SchoolView, StudentClassView, StudentView, \
-    AttendanceView, SchoolSummaryView, update_fcm_token
+    AttendanceView, SchoolSummaryView, update_fcm_token, MyTokenObtainPairView
 
 urlpatterns = [
     path('school/<int:school_id>/department/<int:department_id>/staff/', StaffBySchoolDepartment.as_view(),
@@ -30,5 +30,7 @@ urlpatterns = [
          name='attendance-staff'),
 
     path('update-fcm-token/', update_fcm_token, name='update_fcm_token'),
+
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
 
 ]

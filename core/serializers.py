@@ -30,15 +30,25 @@ class SchoolAdminSerializers(serializers.ModelSerializer):
 
 
 class SchoolSerializers(serializers.ModelSerializer):
+    user_id = serializers.SerializerMethodField()
     school_admin = serializers.SerializerMethodField()
 
     class Meta:
         model = School
-        fields = "__all__"
+        fields = "__all__"  # or list them manually + 'user_id'
 
     def get_school_admin(self, obj):
         admin = getattr(obj, 'schooladmin', None)
         return admin.id if admin else None
+
+    def get_user_id(self, obj):
+        # Get the SchoolAdmin object attached to this school
+        school_admin = getattr(obj, 'schooladmin', None)
+        if school_admin and school_admin.user:
+            return school_admin.user.id
+        return None
+
+
 
 
 class StudentClassSerializers(serializers.ModelSerializer):

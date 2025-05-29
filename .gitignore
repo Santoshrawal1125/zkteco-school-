@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+media/
+staticfiles/        # If you're using `collectstatic`
+local_settings.py   # If you're using a separate local settings file
+
+# Environment
+.env
+*.env
+.env.*
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv/
+
+# Migrations (optional - keep if you want to regenerate)
+**/migrations/__pycache__/
+**/migrations/*.pyc
+
+# Tests
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.cache/
+
+# MyPy
+.mypy_cache/
+
+# Pipenv / Poetry / PDM / Hatch / etc.
+Pipfile.lock
+poetry.lock
+pdm.lock

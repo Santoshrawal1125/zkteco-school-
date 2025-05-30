@@ -67,7 +67,8 @@ def process_attendance_data(post_data, device_sn):
                     arrival_time=arrival_time,
                     device=device,
                     department=user_obj.department if user_type == 'staff' else None,
-                    school=user_obj.school
+                    school=user_obj.school,
+                    student_class=user_obj.student_class if user_type == 'student' else None
                 )
                 logger.info(f"✅ Attendance created for {user_type} ID {user_obj.id} at {arrival_time}")
 

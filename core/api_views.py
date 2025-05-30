@@ -97,26 +97,45 @@ class StudentView(APIView):
         return Response(serializer.data)
 
 
+import logging
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils.dateparse import parse_datetime
+
+from .models import Attendance, Staff, Student, Device
+from .serializers import AttendanceSerializers
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils.dateparse import parse_datetime
+from .models import Attendance, Staff, Student, Device
+from .serializers import AttendanceSerializers
+
+
 class AttendanceView(APIView):
-    from rest_framework.response import Response
-    from django.utils.dateparse import parse_datetime
-    import logging
 
-    logger = logging.getLogger(__name__)
+    def get(self, request, school_id, department_id=None, staff_id=None, student_class_id=None, student_id=None):
+        if staff_id and department_id:
+            # Staff attendance
+            attendance = Attendance.objects.filter(
+                school_id=school_id,
+                department_id=department_id,
+                staff_id=staff_id
+            )
+        elif student_id and student_class_id:
+            # Student attendance
+            attendance = Attendance.objects.filter(
+                school_id=school_id,
+                student_class_id=student_class_id,
+                student_id=student_id
+            )
+        else:
+            return Response({"error": "Missing or invalid parameters"}, status=400)
 
-    def get(self, request, school_id, department_id, staff_id):
-        staff_attendance = Attendance.objects.filter(
-            school_id=school_id,
-            department_id=department_id,
-            staff_id=staff_id
-        )
-        serializer = AttendanceSerializers(staff_attendance, many=True)
+        serializer = AttendanceSerializers(attendance, many=True)
         return Response(serializer.data)
 
-    def post(self, request, school_id, department_id, staff_id):
-        logger.debug("Received attendance POST")
-        logger.debug("Request data: %s", request.data)
-
+    def post(self, request, school_id, department_id=None, staff_id=None, student_class_id=None, student_id=None):
         serial = request.data.get("serial")
         timestamp_str = request.data.get("timestamp")
 
@@ -131,21 +150,40 @@ class AttendanceView(APIView):
         if not device:
             return Response({"error": "Device not found"}, status=404)
 
-        try:
-            staff = Staff.objects.get(id=staff_id, school_id=school_id, department_id=department_id)
-        except Staff.DoesNotExist:
-            return Response({"error": "Staff not found"}, status=404)
+        # Handle staff attendance
+        if staff_id and department_id:
+            try:
+                staff = Staff.objects.get(id=staff_id, school_id=school_id, department_id=department_id)
+            except Staff.DoesNotExist:
+                return Response({"error": "Staff not found"}, status=404)
 
-        attendance = Attendance.objects.create(
-            attendee_type='staff',
-            staff=staff,
-            arrival_time=timestamp,
-            device=device,
-            department=staff.department,
-            school=staff.school,
-        )
+            Attendance.objects.create(
+                attendee_type='staff',
+                staff=staff,
+                arrival_time=timestamp,
+                device=device,
+                department=staff.department,
+                school=staff.school,
+            )
 
-        logger.debug("Attendance created: %s", attendance)
+        # Handle student attendance
+        elif student_id and student_class_id:
+            try:
+                student = Student.objects.get(id=student_id, school_id=school_id, student_class_id=student_class_id)
+            except Student.DoesNotExist:
+                return Response({"error": "Student not found"}, status=404)
+
+            Attendance.objects.create(
+                attendee_type='student',
+                student=student,
+                arrival_time=timestamp,
+                device=device,
+                student_class=student.student_class,
+                school=student.school,
+            )
+
+        else:
+            return Response({"error": "Invalid parameters for staff or student"}, status=400)
 
         return Response({"success": "Attendance recorded"}, status=201)
 

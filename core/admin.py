@@ -3,28 +3,46 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib import admin
 from .models import (
     User, School, SchoolAdmin, Department,
-    StudentClass, Staff, Student, Device, Attendance
+    StudentClass, Staff, Student, Device, Attendance, Shift
 )
 
 
+# Custom user creation form
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'role')
 
 
+# Custom user change form
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'role')
 
 
+# Custom user admin
 class UserAdmin(BaseUserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
 
-    # This ensures password gets hashed on creation AND update
+    list_display = ('username', 'email', 'role', 'is_staff', 'is_superuser')
+    list_filter = ('role', 'is_staff', 'is_superuser')
+
+    fieldsets = BaseUserAdmin.fieldsets + (
+        (None, {'fields': ('role',)}),
+    )
+
+    # ✅ FIX: remove usable_password from add_fieldsets
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'role', 'password1', 'password2'),
+        }),
+    )
+
+    # Optional: Ensure password gets hashed if raw
     def save_model(self, request, obj, form, change):
         password = form.cleaned_data.get('password')
         if password and not password.startswith('pbkdf2_'):
@@ -32,6 +50,7 @@ class UserAdmin(BaseUserAdmin):
         super().save_model(request, obj, form, change)
 
 
+# Register everything
 admin.site.register(User, UserAdmin)
 admin.site.register(School)
 admin.site.register(SchoolAdmin)
@@ -41,3 +60,4 @@ admin.site.register(Staff)
 admin.site.register(Student)
 admin.site.register(Device)
 admin.site.register(Attendance)
+admin.site.register(Shift)

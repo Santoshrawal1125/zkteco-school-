@@ -42,10 +42,21 @@ class Department(models.Model):
         return f"{self.name} - {self.school.name}"
 
 
+class Shift(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, related_name='shifts')
+    name = models.CharField(max_length=100)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    def __str__(self):
+        return f"{self.name} ({self.start_time} - {self.end_time}) - {self.school.name}"
+
+
 # Student class (e.g., Grade 10, Section A)
 class StudentClass(models.Model):
     name = models.CharField(max_length=100)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    shift = models.ForeignKey(Shift, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.school.name}"
@@ -59,6 +70,7 @@ class Staff(models.Model):
     position = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
     fcm_token = models.TextField(blank=True, null=True)
+    shift = models.ForeignKey(Shift, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -117,17 +129,28 @@ class Attendance(models.Model):
     school = models.ForeignKey(School, null=True, blank=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
-        if self.arrival_time:
-            local_arrival = localtime(self.arrival_time)
-            office_start = datetime.time(9, 0)  # 9:00 AM
+        # Step 1: Get the assigned shift based on attendee type
+        shift = None
+        if self.attendee_type == 'staff' and self.staff and self.staff.shift:
+            shift = self.staff.shift
+        elif self.attendee_type == 'student' and self.student and self.student.student_class and self.student.student_class.shift:
+            shift = self.student.student_class.shift
 
-            if local_arrival.time() > office_start:
+        # Step 2: Determine attendance status using shift start time
+        if self.arrival_time and shift:
+            # Convert arrival time to local time (server time → local time)
+            local_arrival = localtime(self.arrival_time)
+
+            # Compare arrival time with shift start time
+            if local_arrival.time() > shift.start_time:
                 self.status = 'late'
             else:
                 self.status = 'present'
         else:
+            # If arrival time is missing or shift is not set, mark as absent
             self.status = 'absent'
 
+        # Step 3: Save the model as usual
         super().save(*args, **kwargs)
 
     def __str__(self):

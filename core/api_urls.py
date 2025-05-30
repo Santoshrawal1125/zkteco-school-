@@ -29,6 +29,10 @@ urlpatterns = [
          AttendanceView.as_view(),
          name='attendance-staff'),
 
+    path('school/<int:school_id>/student_class/<int:student_class_id>/student/<int:student_id>/attendance/',
+         AttendanceView.as_view(),
+         name='attendance-student'),
+
     path('update-fcm-token/', update_fcm_token, name='update_fcm_token'),
 
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),

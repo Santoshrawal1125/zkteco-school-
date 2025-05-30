@@ -49,8 +49,6 @@ class SchoolSerializers(serializers.ModelSerializer):
         return None
 
 
-
-
 class StudentClassSerializers(serializers.ModelSerializer):
     class Meta:
         model = StudentClass
@@ -66,9 +64,12 @@ class StudentSerializers(serializers.ModelSerializer):
 
 
 class AttendanceSerializers(serializers.ModelSerializer):
+
     class Meta:
         model = Attendance
         fields = "__all__"
+
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

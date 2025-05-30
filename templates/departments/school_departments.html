@@ -1,0 +1,41 @@
+{% extends "base/admin_base.html" %}
+{% load static %}
+
+{% block title %}{{ school.name }} - Departments{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/96/school-building.png" alt="School Icon" style="width:64px;">
+        <h2 class="fw-bold mt-3">{{ school.name }}</h2>
+        <p class="text-muted">List of all departments under {{ school.name }}</p>
+    </div>
+
+    {% if departments %}
+    <div class="row g-4">
+        {% for department in departments %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://img.icons8.com/color/48/books.png" alt="Department Icon" class="me-3" style="width:48px;">
+                        <div>
+                            <div class="label-text text-uppercase small text-muted">Department</div>
+                            <h5 class="card-title">{{ department.name }}</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a href="#" class="btn btn-sm btn-outline-primary">View More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center mt-4" role="alert">
+        No departments found for this school.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

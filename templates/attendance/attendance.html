@@ -1,0 +1,40 @@
+{% extends "base/admin_base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Logo" width="40" class="me-2">
+        Welcome to Admin Dashboard
+    </h1>
+
+    <div class="row justify-content-center">
+        <!-- Student Section -->
+        <div class="col-md-5 col-sm-12 mb-4">
+            <a href="{% url 'student_attendance' %}" class="text-decoration-none">
+                <div class="rounded-3 bg-primary text-white p-4 h-100 shadow text-center">
+                    <div class="d-inline-block bg-white rounded-circle p-3 mb-3">
+                        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="Student Icon" width="60">
+                    </div>
+                    <h2>Student</h2>
+                    <p>Click to manage or view student dashboard</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Staff Section -->
+        <div class="col-md-5 col-sm-12 mb-4">
+            <a href="{% url 'staff_attendance' %}" class="text-decoration-none">
+                <div class="rounded-3 bg-success text-white p-4 h-100 shadow text-center">
+                    <div class="d-inline-block bg-white rounded-circle p-3 mb-3">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png" alt="Staff Icon" width="60">
+                    </div>
+                    <h2>Staff</h2>
+                    <p>Click to manage or view staff dashboard</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

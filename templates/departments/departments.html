@@ -1,0 +1,64 @@
+{% extends "base/admin_base.html" %}
+{% load static %}
+{% block title %}Schools & Departments{% endblock %}
+
+{% block content %}
+<style>
+    .label-text {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6610f2;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .action-btn {
+        color: #6610f2;
+        transition: color 0.2s ease-in-out;
+    }
+    .action-btn:hover {
+        color: #3b0d94;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/64/school-building.png" alt="Schools Icon" style="width: 50px;">
+        <h2 class="fw-bold mt-3">Schools</h2>
+        <p class="text-muted">Click on a school to view its departments.</p>
+    </div>
+
+    {% if schools %}
+    <div class="row g-4">
+        {% for school in schools %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <!-- School Info -->
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://img.icons8.com/color/48/000000/school.png" alt="School Icon" class="me-3 rounded-circle shadow-sm" style="width: 48px; height:48px;">
+                        <div>
+                            <div class="label-text">School</div>
+                            <h4 class="card-title mb-0">{{ school.name }}</h4>
+                        </div>
+                    </div>
+
+                    <p class="card-text text-muted flex-grow-1">{{ school.description|truncatewords:20 }}</p>
+
+                    <div class="mt-auto text-end">
+                        <a href="{% url 'school_departments' school.id %}" class="btn btn-sm btn-outline-primary">
+                            View Departments
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            No schools found. Please add some schools.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

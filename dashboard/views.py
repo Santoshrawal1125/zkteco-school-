@@ -3,6 +3,8 @@ from django.contrib import messages
 from core.models import *
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
+from django.http import HttpResponseBadRequest
+from datetime import datetime
 
 
 # Create your views here.
@@ -173,8 +175,6 @@ def add_user(request):
     return render(request, 'user/add_user.html', context)
 
 
-
-
 def edit_user(request, pk):
     user = get_object_or_404(User, pk=pk)
 
@@ -196,8 +196,22 @@ def edit_user(request, pk):
 
 
 def user_detail(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    return render(request, 'user/user_detail.html', {'user_obj': user})
+    user_obj = get_object_or_404(User, pk=pk)
+    attendance_records = []
+
+    if user_obj.role == 'staff':
+        staff = getattr(user_obj, 'staff', None)
+        if staff:
+            attendance_records = Attendance.objects.filter(staff=staff).order_by('-timestamp')
+    elif user_obj.role == 'student':
+        student = getattr(user_obj, 'student', None)
+        if student:
+            attendance_records = Attendance.objects.filter(student=student).order_by('-timestamp')
+
+    return render(request, 'user/user_detail.html', {
+        'user_obj': user_obj,
+        'attendance_records': attendance_records
+    })
 
 
 @require_POST
@@ -206,3 +220,110 @@ def delete_user(request, pk):
     user.delete()
     messages.success(request, f"User '{user.username}' has been deleted.")
     return redirect('user_list')
+
+
+# ATTENDENCE
+
+
+def add_attendance(request, user_pk):
+    user_obj = get_object_or_404(User, pk=user_pk)
+
+    if request.method == 'POST':
+        date_str = request.POST.get('date')  # e.g., '2025-06-02'
+        arrival_str = request.POST.get('arrival_time')  # e.g., '10:02'
+        departure_str = request.POST.get('departure_time')  # e.g., '17:00'
+        status = request.POST.get('status')
+
+        # Convert to datetime objects
+        try:
+            arrival_time = datetime.strptime(f"{date_str} {arrival_str}", "%Y-%m-%d %H:%M")
+            departure_time = datetime.strptime(f"{date_str} {departure_str}", "%Y-%m-%d %H:%M")
+        except ValueError:
+            return HttpResponseBadRequest("Invalid date/time format.")
+
+        # Determine role and related model
+        if user_obj.role == 'student':
+            try:
+                student = user_obj.student
+                attendance = Attendance(
+                    attendee_type='student',
+                    student=student,
+                    school=student.school,
+                    student_class=student.student_class,
+                    arrival_time=arrival_time,
+                    departure_time=departure_time,
+                    status=status,
+                )
+            except Student.DoesNotExist:
+                return HttpResponseBadRequest("Student profile not found.")
+
+        elif user_obj.role == 'staff':
+            try:
+                staff = user_obj.staff
+                attendance = Attendance(
+                    attendee_type='staff',
+                    staff=staff,
+                    school=staff.school,
+                    department=staff.department,
+                    arrival_time=arrival_time,
+                    departure_time=departure_time,
+                    status=status,
+                )
+            except Staff.DoesNotExist:
+                return HttpResponseBadRequest("Staff profile not found.")
+
+        else:
+            return HttpResponseBadRequest("Attendance can only be added for staff or student.")
+
+        attendance.save()
+        return redirect('user_detail', pk=user_obj.pk)
+
+    return render(request, 'attendance/add_attendance.html', {'user_obj': user_obj})
+
+
+from django.utils.dateparse import parse_date, parse_time
+
+
+def edit_attendance(request, user_pk, att_pk):
+    user_obj = get_object_or_404(User, pk=user_pk)
+    attendance = get_object_or_404(Attendance, pk=att_pk)
+
+    if request.method == 'POST':
+        date_str = request.POST.get('date')
+        arrival_time_str = request.POST.get('arrival_time')
+        departure_time_str = request.POST.get('departure_time')
+        status = request.POST.get('status')
+
+        # Parse date and times separately
+        date_obj = parse_date(date_str)  # e.g. 2025-06-02
+        arrival_time_obj = parse_time(arrival_time_str)  # e.g. 10:02:00
+        departure_time_obj = parse_time(departure_time_str)
+
+        if date_obj and arrival_time_obj:
+            # Combine date and time into datetime for arrival_time
+            attendance.arrival_time = datetime.combine(date_obj, arrival_time_obj)
+        else:
+            attendance.arrival_time = None  # or keep existing
+
+        if date_obj and departure_time_obj:
+            # Combine date and time into datetime for departure_time
+            attendance.departure_time = datetime.combine(date_obj, departure_time_obj)
+        else:
+            attendance.departure_time = None
+
+        attendance.status = status
+        attendance.save()
+        messages.success(request, "Attendance record updated.")
+        return redirect('user_detail', pk=user_pk)
+
+    # For GET request, render the form with attendance data
+    return render(request, 'attendance/edit_attendance.html', {
+        'user_obj': user_obj,
+        'attendance': attendance,
+    })
+
+def delete_attendance(request, user_pk, att_pk):
+    attendance = get_object_or_404(Attendance, pk=att_pk)
+    attendance.delete()
+    messages.success(request, "Attendance record deleted.")
+    return redirect('user_detail', pk=user_pk)

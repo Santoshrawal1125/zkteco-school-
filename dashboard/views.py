@@ -3,6 +3,9 @@ from django.contrib import messages
 from core.models import *
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_POST
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+from core.models import StudentClass
 
 
 # Create your views here.
@@ -71,6 +74,34 @@ def school_delete(request, pk):
         messages.success(request, "School has been deleted successfully.")
         return redirect('school')
     return redirect('school_details', pk=pk)
+
+
+
+def student_and_staff(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    return render(request, 'school/studentandstaff.html', {'school': school})
+
+#staff according to their school
+
+def school_staffs(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    staffs = Staff.objects.filter(school=school)
+
+    return render(request, 'school/staff_acc_to_school.html', {
+        'school': school,
+        'staffs': staffs,
+    })
+
+    #list of student classes under a specific school
+def school_student_classes(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    student_classes = StudentClass.objects.filter(school=school)
+
+    return render(request, 'school/school_classes.html', {
+        'school': school,
+        'student_classes': student_classes,
+    })
+
 
 
 # department and theire pages
@@ -206,3 +237,29 @@ def delete_user(request, pk):
     user.delete()
     messages.success(request, f"User '{user.username}' has been deleted.")
     return redirect('user_list')
+
+
+#LOGIN VIEW
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    return render(request, 'login/login.html')
+
+#LOG OUT VIEW
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

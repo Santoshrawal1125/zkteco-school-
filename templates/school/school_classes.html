@@ -1,0 +1,49 @@
+{% extends "base/admin_base.html" %}
+{% block title %}{{ school.name }} - Classes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="Class Icon" style="width: 64px;" class="mb-3">
+        <h2 class="fw-bold">{{ school.name }}</h2>
+        <p class="text-muted mb-0">List of classes under {{ school.name }}</p>
+    </div>
+
+    <!-- Class List -->
+    {% if student_classes %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Class Name</th>
+                    <th>Shift</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cls in student_classes %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ cls.name }}</td>
+                    <td>
+    {% if cls.shift %}
+        {{ cls.shift.name }}
+    {% else %}
+        -
+    {% endif %}
+</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center mt-4">
+        <p class="text-muted">No classes found for this school.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

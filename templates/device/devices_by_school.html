@@ -1,0 +1,51 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Devices for {{ school.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/64/laptop.png" alt="Device Icon">
+        <h2 class="fw-bold">Devices - {{ school.name }}</h2>
+        <p class="text-muted">All devices registered under this school</p>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="{% url 'school_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Schools
+        </a>
+    </div>
+
+    {% if devices %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="text-uppercase text-muted small border-bottom">
+                <tr>
+                    <th>#</th>
+                    <th>Serial Number</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr class="border-bottom">
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ device.serial_number }}</strong></td>
+                    <td>
+                        {% if device.location %}
+                            <i class="bi bi-geo-alt text-primary"></i> {{ device.location }}
+                        {% else %}
+                            <span class="text-muted fst-italic">No location</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center text-muted mt-4">No devices found for this school.</div>
+    {% endif %}
+</div>
+{% endblock %}

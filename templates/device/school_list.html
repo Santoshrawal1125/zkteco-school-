@@ -1,0 +1,50 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Schools{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/64/school-building.png" alt="School Icon" class="mb-2">
+        <h2 class="fw-bold">All Registered Schools</h2>
+        <p class="text-muted">Click on a school to view its associated devices</p>
+    </div>
+
+    {% if schools %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle table-borderless w-100">
+            <thead class="border-bottom text-uppercase text-muted small">
+                <tr>
+                    <th>#</th>
+                    <th>School</th>
+                    <th>Address</th>
+                    <th class="text-end">View Devices</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for school in schools %}
+                <tr class="border-bottom">
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="https://img.icons8.com/color/48/school-building.png" alt="School Icon" class="me-2">
+                            <strong class="text-decoration-underline">{{ school.name }}</strong>
+                        </div>
+                    </td>
+                    <td><i class="bi bi-geo-alt-fill text-primary"></i> {{ school.address }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'devices_by_school' school.id %}" class="btn btn-outline-primary btn-sm">
+                            View Devices
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center mt-4 text-muted">No schools found.</div>
+    {% endif %}
+</div>
+{% endblock %}

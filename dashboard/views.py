@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from core.models import School
 from core.models import Department
+from core.models import Device ,Shift
 
 
 # Create your views here.
@@ -27,6 +28,8 @@ def school(request):
     return render(request, 'school/school.html', {'schools': schools})
 
 
+from django.contrib import messages  # Add this import at the top
+
 def add_school(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -34,7 +37,11 @@ def add_school(request):
 
         if name and address:
             School.objects.create(name=name, address=address)
+            messages.success(request, "School added successfully!")  
             return redirect('school')
+
+        else:
+            messages.error(request, "Both name and address are required.")  
 
     return render(request, 'school/add_school.html')
 
@@ -50,6 +57,7 @@ def school_details(request, pk):
             school.name = name
             school.address = address
             school.save()
+            messages.success(request, "School updated successfully.")
             return redirect('school')
 
     return render(request, 'school/school_details.html', {'school': school})
@@ -85,5 +93,27 @@ def school_departments(request, school_id):
     })
 
 
+
+#device and their pages
+def school_list(request):
+    schools = School.objects.all()
+    return render(request, 'device/school_list.html', {'schools': schools})
+
+def devices_by_school(request, school_id):
+    school = get_object_or_404(School, pk=school_id)
+    devices = Device.objects.filter(school=school)
+    return render(request, 'device/devices_by_school.html', {
+        'school': school,
+        'devices': devices
+    })
+
+#shift and their pages
+
+
+def shift_list(request):
+    shifts = Shift.objects.select_related('school').all().order_by('school__name', 'start_time')
+    return render(request, 'shift/shift_list.html', {'shifts': shifts})
+
 def user(request):
     return render(request, 'user/user.html')
+

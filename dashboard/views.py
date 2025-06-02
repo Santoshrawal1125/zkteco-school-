@@ -1,51 +1,45 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from core.models import *
-from django.contrib.auth import get_user_model
-from django.views.decorators.http import require_POST
-from django.contrib.auth import authenticate, login
+from django.contrib import messages 
+from core.models import School
+from core.models import Department
+from core.models import Device ,Shiftfrom django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from core.models import StudentClass
 
 
 # Create your views here.
 def dashboard(request):
-    return render(request, 'base/admin_base.html')
-
+    return render (request,'base/admin_base.html')
 
 def attendance(request):
-    return render(request, 'attendance/attendance.html')
-
+    return render (request,'attendance/attendance.html')
 
 def student_attendance(request):
     return render(request, 'attendance/student_attendance.html')
 
-
 def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
-
 
 # school and its related pages
 def school(request):
     schools = School.objects.all()
-    return render(request, 'school/school.html', {'schools': schools})
+    return render (request,'school/school.html', {'schools': schools})
 
 
 from django.contrib import messages  # Add this import at the top
-
 
 def add_school(request):
     if request.method == "POST":
         name = request.POST.get('name')
         address = request.POST.get('address')
 
-        if name and address:
+        if name and address: 
             School.objects.create(name=name, address=address)
-            messages.success(request, "School added successfully!")
+            messages.success(request, "School added successfully!")  
             return redirect('school')
 
         else:
-            messages.error(request, "Both name and address are required.")
+            messages.error(request, "Both name and address are required.")  
 
     return render(request, 'school/add_school.html')
 
@@ -72,7 +66,7 @@ def school_delete(request, pk):
     if request.method == "POST":
         school.delete()
         messages.success(request, "School has been deleted successfully.")
-        return redirect('school')
+        return redirect('school')  
     return redirect('school_details', pk=pk)
 
 
@@ -114,7 +108,6 @@ def departments(request):
         'schools': schools
     })
 
-
 def school_departments(request, school_id):
     school = get_object_or_404(School, id=school_id)
     departments = Department.objects.filter(school=school)
@@ -125,11 +118,10 @@ def school_departments(request, school_id):
     })
 
 
-# device and their pages
+#device and their pages
 def school_list(request):
     schools = School.objects.all()
     return render(request, 'device/school_list.html', {'schools': schools})
-
 
 def devices_by_school(request, school_id):
     school = get_object_or_404(School, pk=school_id)
@@ -139,8 +131,7 @@ def devices_by_school(request, school_id):
         'devices': devices
     })
 
-
-# shift and their pages
+#shift and their pages
 
 
 def shift_list(request):

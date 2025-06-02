@@ -39,6 +39,14 @@ urlpatterns = [
 
 
 
+
     #LOGOUT
     path('logout/', views.logout_view, name='logout'),
+
+    # attendence
+    path('users/<int:user_pk>/attendance/add/', views.add_attendance, name='add_attendance'),
+    path('users/<int:user_pk>/attendance/<int:att_pk>/edit/', views.edit_attendance, name='edit_attendance'),
+    path('users/<int:user_pk>/attendance/<int:att_pk>/delete/', views.delete_attendance, name='delete_attendance'),
+
+
 ]

@@ -1,0 +1,20 @@
+<form method="post">
+    {% csrf_token %}
+    <label>Date:</label>
+    <input type="date" name="date" value="{{ attendance.arrival_time|date:'Y-m-d' }}" required><br>
+
+    <label>Arrival Time:</label>
+    <input type="time" name="arrival_time" value="{{ attendance.arrival_time|time:'H:i' }}" required><br>
+
+    <label>Departure Time:</label>
+    <input type="time" name="departure_time" value="{{ attendance.departure_time|time:'H:i' }}" required><br>
+
+    <label>Status:</label>
+    <select name="status" required>
+        <option value="present" {% if attendance.status == 'present' %}selected{% endif %}>Present</option>
+        <option value="late" {% if attendance.status == 'late' %}selected{% endif %}>Late</option>
+        <option value="absent" {% if attendance.status == 'absent' %}selected{% endif %}>Absent</option>
+    </select><br>
+
+    <button type="submit">Save Changes</button>
+</form>

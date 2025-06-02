@@ -1,50 +1,45 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from core.models import *
-from django.contrib.auth import get_user_model
-from django.views.decorators.http import require_POST
-from django.http import HttpResponseBadRequest
-from datetime import datetime
+from django.contrib import messages 
+from core.models import School
+from core.models import Department
+from core.models import Device ,Shiftfrom django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+from core.models import StudentClass
 
 
 # Create your views here.
 def dashboard(request):
-    return render(request, 'base/admin_base.html')
-
+    return render (request,'base/admin_base.html')
 
 def attendance(request):
-    return render(request, 'attendance/attendance.html')
-
+    return render (request,'attendance/attendance.html')
 
 def student_attendance(request):
     return render(request, 'attendance/student_attendance.html')
 
-
 def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
-
 
 # school and its related pages
 def school(request):
     schools = School.objects.all()
-    return render(request, 'school/school.html', {'schools': schools})
+    return render (request,'school/school.html', {'schools': schools})
 
 
 from django.contrib import messages  # Add this import at the top
-
 
 def add_school(request):
     if request.method == "POST":
         name = request.POST.get('name')
         address = request.POST.get('address')
 
-        if name and address:
+        if name and address: 
             School.objects.create(name=name, address=address)
-            messages.success(request, "School added successfully!")
+            messages.success(request, "School added successfully!")  
             return redirect('school')
 
         else:
-            messages.error(request, "Both name and address are required.")
+            messages.error(request, "Both name and address are required.")  
 
     return render(request, 'school/add_school.html')
 
@@ -71,8 +66,36 @@ def school_delete(request, pk):
     if request.method == "POST":
         school.delete()
         messages.success(request, "School has been deleted successfully.")
-        return redirect('school')
+        return redirect('school')  
     return redirect('school_details', pk=pk)
+
+
+
+def student_and_staff(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    return render(request, 'school/studentandstaff.html', {'school': school})
+
+#staff according to their school
+
+def school_staffs(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    staffs = Staff.objects.filter(school=school)
+
+    return render(request, 'school/staff_acc_to_school.html', {
+        'school': school,
+        'staffs': staffs,
+    })
+
+    #list of student classes under a specific school
+def school_student_classes(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    student_classes = StudentClass.objects.filter(school=school)
+
+    return render(request, 'school/school_classes.html', {
+        'school': school,
+        'student_classes': student_classes,
+    })
+
 
 
 # department and theire pages
@@ -85,7 +108,6 @@ def departments(request):
         'schools': schools
     })
 
-
 def school_departments(request, school_id):
     school = get_object_or_404(School, id=school_id)
     departments = Department.objects.filter(school=school)
@@ -96,11 +118,10 @@ def school_departments(request, school_id):
     })
 
 
-# device and their pages
+#device and their pages
 def school_list(request):
     schools = School.objects.all()
     return render(request, 'device/school_list.html', {'schools': schools})
-
 
 def devices_by_school(request, school_id):
     school = get_object_or_404(School, pk=school_id)
@@ -110,8 +131,7 @@ def devices_by_school(request, school_id):
         'devices': devices
     })
 
-
-# shift and their pages
+#shift and their pages
 
 
 def shift_list(request):
@@ -175,6 +195,8 @@ def add_user(request):
     return render(request, 'user/add_user.html', context)
 
 
+
+
 def edit_user(request, pk):
     user = get_object_or_404(User, pk=pk)
 
@@ -196,22 +218,8 @@ def edit_user(request, pk):
 
 
 def user_detail(request, pk):
-    user_obj = get_object_or_404(User, pk=pk)
-    attendance_records = []
-
-    if user_obj.role == 'staff':
-        staff = getattr(user_obj, 'staff', None)
-        if staff:
-            attendance_records = Attendance.objects.filter(staff=staff).order_by('-timestamp')
-    elif user_obj.role == 'student':
-        student = getattr(user_obj, 'student', None)
-        if student:
-            attendance_records = Attendance.objects.filter(student=student).order_by('-timestamp')
-
-    return render(request, 'user/user_detail.html', {
-        'user_obj': user_obj,
-        'attendance_records': attendance_records
-    })
+    user = get_object_or_404(User, pk=pk)
+    return render(request, 'user/user_detail.html', {'user_obj': user})
 
 
 @require_POST
@@ -222,108 +230,27 @@ def delete_user(request, pk):
     return redirect('user_list')
 
 
-# ATTENDENCE
+#LOGIN VIEW
 
-
-def add_attendance(request, user_pk):
-    user_obj = get_object_or_404(User, pk=user_pk)
-
-    if request.method == 'POST':
-        date_str = request.POST.get('date')  # e.g., '2025-06-02'
-        arrival_str = request.POST.get('arrival_time')  # e.g., '10:02'
-        departure_str = request.POST.get('departure_time')  # e.g., '17:00'
-        status = request.POST.get('status')
-
-        # Convert to datetime objects
-        try:
-            arrival_time = datetime.strptime(f"{date_str} {arrival_str}", "%Y-%m-%d %H:%M")
-            departure_time = datetime.strptime(f"{date_str} {departure_str}", "%Y-%m-%d %H:%M")
-        except ValueError:
-            return HttpResponseBadRequest("Invalid date/time format.")
-
-        # Determine role and related model
-        if user_obj.role == 'student':
-            try:
-                student = user_obj.student
-                attendance = Attendance(
-                    attendee_type='student',
-                    student=student,
-                    school=student.school,
-                    student_class=student.student_class,
-                    arrival_time=arrival_time,
-                    departure_time=departure_time,
-                    status=status,
-                )
-            except Student.DoesNotExist:
-                return HttpResponseBadRequest("Student profile not found.")
-
-        elif user_obj.role == 'staff':
-            try:
-                staff = user_obj.staff
-                attendance = Attendance(
-                    attendee_type='staff',
-                    staff=staff,
-                    school=staff.school,
-                    department=staff.department,
-                    arrival_time=arrival_time,
-                    departure_time=departure_time,
-                    status=status,
-                )
-            except Staff.DoesNotExist:
-                return HttpResponseBadRequest("Staff profile not found.")
-
-        else:
-            return HttpResponseBadRequest("Attendance can only be added for staff or student.")
-
-        attendance.save()
-        return redirect('user_detail', pk=user_obj.pk)
-
-    return render(request, 'attendance/add_attendance.html', {'user_obj': user_obj})
-
-
-from django.utils.dateparse import parse_date, parse_time
-
-
-def edit_attendance(request, user_pk, att_pk):
-    user_obj = get_object_or_404(User, pk=user_pk)
-    attendance = get_object_or_404(Attendance, pk=att_pk)
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
 
     if request.method == 'POST':
-        date_str = request.POST.get('date')
-        arrival_time_str = request.POST.get('arrival_time')
-        departure_time_str = request.POST.get('departure_time')
-        status = request.POST.get('status')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        # Parse date and times separately
-        date_obj = parse_date(date_str)  # e.g. 2025-06-02
-        arrival_time_obj = parse_time(arrival_time_str)  # e.g. 10:02:00
-        departure_time_obj = parse_time(departure_time_str)
-
-        if date_obj and arrival_time_obj:
-            # Combine date and time into datetime for arrival_time
-            attendance.arrival_time = datetime.combine(date_obj, arrival_time_obj)
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('dashboard')
         else:
-            attendance.arrival_time = None  # or keep existing
+            messages.error(request, "Invalid username or password.")
 
-        if date_obj and departure_time_obj:
-            # Combine date and time into datetime for departure_time
-            attendance.departure_time = datetime.combine(date_obj, departure_time_obj)
-        else:
-            attendance.departure_time = None
+    return render(request, 'login/login.html')
 
-        attendance.status = status
-        attendance.save()
-        messages.success(request, "Attendance record updated.")
-        return redirect('user_detail', pk=user_pk)
+#LOG OUT VIEW
 
-    # For GET request, render the form with attendance data
-    return render(request, 'attendance/edit_attendance.html', {
-        'user_obj': user_obj,
-        'attendance': attendance,
-    })
-
-def delete_attendance(request, user_pk, att_pk):
-    attendance = get_object_or_404(Attendance, pk=att_pk)
-    attendance.delete()
-    messages.success(request, "Attendance record deleted.")
-    return redirect('user_detail', pk=user_pk)
+def logout_view(request):
+    logout(request)
+    return redirect('login')

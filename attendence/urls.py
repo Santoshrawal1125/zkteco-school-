@@ -23,9 +23,15 @@ from rest_framework_simplejwt.views import (
 from core.swagger import schema_view  # importing swagger view
 from django.conf.urls.static import static
 from django.conf import settings
+from dashboard import views as dashboard_views
 
 urlpatterns = [
+                 
                   path('admin/', admin.site.urls),
+                  #log in 
+                  path('', dashboard_views.login_view, name='login'),
+
+                  
                   path('iclock/', include('core.urls')),
                   path('api/', include('core.api_urls')),
                   path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

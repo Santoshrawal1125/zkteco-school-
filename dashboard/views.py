@@ -1,26 +1,31 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages 
+from django.contrib import messages
 from core.models import School
 from core.models import Department
 from core.models import Device ,Shift
 
+
 # Create your views here.
 def dashboard(request):
-    return render (request,'base/admin_base.html')
+    return render(request, 'base/admin_base.html')
+
 
 def attendance(request):
-    return render (request,'attendance/attendance.html')
+    return render(request, 'attendance/attendance.html')
+
 
 def student_attendance(request):
     return render(request, 'attendance/student_attendance.html')
 
+
 def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
+
 
 # school and its related pages
 def school(request):
     schools = School.objects.all()
-    return render (request,'school/school.html', {'schools': schools})
+    return render(request, 'school/school.html', {'schools': schools})
 
 
 from django.contrib import messages  # Add this import at the top
@@ -30,7 +35,7 @@ def add_school(request):
         name = request.POST.get('name')
         address = request.POST.get('address')
 
-        if name and address: 
+        if name and address:
             School.objects.create(name=name, address=address)
             messages.success(request, "School added successfully!")  
             return redirect('school')
@@ -63,8 +68,9 @@ def school_delete(request, pk):
     if request.method == "POST":
         school.delete()
         messages.success(request, "School has been deleted successfully.")
-        return redirect('school')  
+        return redirect('school')
     return redirect('school_details', pk=pk)
+
 
 # department and theire pages
 def departments(request):
@@ -76,6 +82,7 @@ def departments(request):
         'schools': schools
     })
 
+
 def school_departments(request, school_id):
     school = get_object_or_404(School, id=school_id)
     departments = Department.objects.filter(school=school)
@@ -84,6 +91,7 @@ def school_departments(request, school_id):
         'school': school,
         'departments': departments,
     })
+
 
 
 #device and their pages
@@ -105,3 +113,7 @@ def devices_by_school(request, school_id):
 def shift_list(request):
     shifts = Shift.objects.select_related('school').all().order_by('school__name', 'start_time')
     return render(request, 'shift/shift_list.html', {'shifts': shifts})
+
+def user(request):
+    return render(request, 'user/user.html')
+

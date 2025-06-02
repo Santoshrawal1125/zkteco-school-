@@ -23,4 +23,5 @@ urlpatterns = [
     path('shifts/', views.shift_list, name='shifts'),
 
 
+    path('user/', views.user, name='users')
 ]

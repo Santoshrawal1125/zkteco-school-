@@ -15,4 +15,5 @@ urlpatterns = [
     path('departments/', views.departments, name='departments'),
     path('school/<int:school_id>/departments/', views.school_departments, name='school_departments'),
 
+    path('user/', views.user, name='users')
 ]

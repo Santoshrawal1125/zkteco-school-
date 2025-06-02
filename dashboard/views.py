@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from core.models import School, Department, Device, Shift, User
+from core.models import *
+from django.contrib.auth import get_user_model
+from django.views.decorators.http import require_POST
 
 
 # Create your views here.
@@ -115,6 +117,92 @@ def shift_list(request):
     return render(request, 'shift/shift_list.html', {'shifts': shifts})
 
 
-def user(request):
+User = get_user_model()
+
+
+def user_list(request):
     users = User.objects.all()
-    return render(request, 'user/user.html', {'users': users})
+    return render(request, 'user/user_list.html', {'users': users})
+
+
+def add_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        role = request.POST.get('role')
+
+        if role == 'student':
+            password = f"{username}@123"  # Auto-generated password for student
+        else:
+            password = request.POST.get('password')
+
+        school_id = request.POST.get('school')
+        school = School.objects.filter(id=school_id).first()
+
+        user = User.objects.create_user(username=username, email=email, password=password, role=role)
+
+        if role == 'school_admin':
+            SchoolAdmin.objects.create(user=user, school=school)
+        elif role == 'staff':
+            department_id = request.POST.get('department')
+            position = request.POST.get('position')
+            shift_id = request.POST.get('shift')
+            Staff.objects.create(user=user, school=school, department_id=department_id,
+                                 position=position, shift_id=shift_id)
+        elif role == 'student':
+            student_class_id = request.POST.get('student_class')
+            Student.objects.create(user=user, school=school, student_class_id=student_class_id)
+
+        # ✅ Place this block here:
+        if role == 'student':
+            messages.success(request, f"Student user added successfully. Default password is: {password}")
+        elif role == 'staff':
+            messages.success(request, f"Staff user added successfully. Default password is: {password}")
+        else:
+            messages.success(request, 'User added successfully.')
+
+        return redirect('user_list')  # after success message
+
+    # for GET request
+    context = {
+        'schools': School.objects.all(),
+        'departments': Department.objects.all(),
+        'classes': StudentClass.objects.all(),
+        'shifts': Shift.objects.all(),
+    }
+    return render(request, 'user/add_user.html', context)
+
+
+
+
+def edit_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+
+    if request.method == 'POST':
+        user.username = request.POST.get('username')
+        user.email = request.POST.get('email')
+        user.role = request.POST.get('role')
+        user.save()
+
+        # Update role-specific data if needed (optional)
+        messages.success(request, 'User updated successfully.')
+        return redirect('user_list')
+
+    context = {
+        'user_obj': user,
+        'schools': School.objects.all(),
+    }
+    return render(request, 'user/edit_user.html', context)
+
+
+def user_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    return render(request, 'user/user_detail.html', {'user_obj': user})
+
+
+@require_POST
+def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.delete()
+    messages.success(request, f"User '{user.username}' has been deleted.")
+    return redirect('user_list')

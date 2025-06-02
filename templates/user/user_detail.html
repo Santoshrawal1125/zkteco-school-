@@ -1,0 +1,63 @@
+{% extends "base/admin_base.html" %}
+{% block title %}User Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Card Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-person-lines-fill text-primary"></i> User Profile</h2>
+            <p class="text-muted">Detailed information about the selected user.</p>
+        </div>
+        <div>
+            <a href="{% url 'edit_user' user_obj.pk %}" class="btn btn-outline-primary">
+                <i class="bi bi-pencil-square"></i> Edit
+            </a>
+            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Users
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center mb-4">
+                <img src="https://img.icons8.com/ios-filled/100/user-male-circle.png" class="rounded-circle me-3" alt="User Avatar">
+                <div>
+                    <h4 class="fw-semibold mb-0">{{ user_obj.username }}</h4>
+                    <span class="badge bg-info text-dark text-uppercase small px-3 py-1">{{ user_obj.role }}</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted"><i class="bi bi-envelope-fill text-primary me-2"></i>Email</p>
+                    <p class="fw-semibold">{{ user_obj.email }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted"><i class="bi bi-person-badge-fill text-primary me-2"></i>Role</p>
+                    <p class="fw-semibold text-capitalize">{{ user_obj.role }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted"><i class="bi bi-check-circle-fill text-success me-2"></i>Active Status</p>
+                    <p class="fw-semibold">
+                        {% if user_obj.is_active %}
+                            <span class="text-success">Active</span>
+                        {% else %}
+                            <span class="text-danger">Inactive</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

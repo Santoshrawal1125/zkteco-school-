@@ -13,11 +13,10 @@ urlpatterns = [
     path('school_details/<int:pk>/', views.school_details, name='school_details'),
     path('school_delete/<int:pk>/', views.school_delete, name='school_delete'),
     path('student_and_staff/<int:school_id>/', views.student_and_staff, name='student_and_staff'),
-    #staffs according to their school
-    path('school/<int:school_id>/staffs/', views.school_staffs, name='school_staffs'),
-    #list of student classes under a specific school 
+    # staffs according to their school
+    path('school/<int:school_id>/department/<int:department_id>/staffs/', views.school_staffs, name='school_staffs'),
+    # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
-
 
     # departments and its related pages
     path('departments/', views.departments, name='departments'),
@@ -37,16 +36,12 @@ urlpatterns = [
     path('users/<int:pk>/', views.user_detail, name='user_detail'),
     path('users/<int:pk>/delete/', views.delete_user, name='delete_user'),
 
-
-
-
-    #LOGOUT
+    # LOGOUT
     path('logout/', views.logout_view, name='logout'),
 
     # attendence
     path('users/<int:user_pk>/attendance/add/', views.add_attendance, name='add_attendance'),
     path('users/<int:user_pk>/attendance/<int:att_pk>/edit/', views.edit_attendance, name='edit_attendance'),
     path('users/<int:user_pk>/attendance/<int:att_pk>/delete/', views.delete_attendance, name='delete_attendance'),
-
 
 ]

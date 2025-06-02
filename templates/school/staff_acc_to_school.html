@@ -40,7 +40,12 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="rounded-circle" style="width: 40px; height: 40px;">
                         {% endif %}
                     </td>
-                    <td>{{ staff.user.get_full_name }}</td>
+                    <td>
+                      <a href="{% url 'user_detail' staff.user.pk %}">
+                        {{ staff.user.get_full_name }}
+                      </a>
+                    </td>
+
                     <td>{{ staff.user.username }}</td>
                     <td>{{ staff.user.email }}</td>
                     <td>{{ staff.position }}</td>

@@ -100,6 +100,7 @@ class Device(models.Model):
 # Unified Attendance model for staff and student
 from django.utils.timezone import localtime
 import datetime
+from django.utils.timezone import make_aware, is_naive, localtime
 
 
 class Attendance(models.Model):
@@ -138,19 +139,19 @@ class Attendance(models.Model):
 
         # Step 2: Determine attendance status using shift start time
         if self.arrival_time and shift:
-            # Convert arrival time to local time (server time → local time)
+            # Make sure arrival_time is timezone-aware
+            if is_naive(self.arrival_time):
+                self.arrival_time = make_aware(self.arrival_time)
+
             local_arrival = localtime(self.arrival_time)
 
-            # Compare arrival time with shift start time
             if local_arrival.time() > shift.start_time:
                 self.status = 'late'
             else:
                 self.status = 'present'
         else:
-            # If arrival time is missing or shift is not set, mark as absent
             self.status = 'absent'
 
-        # Step 3: Save the model as usual
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -1,0 +1,16 @@
+{% extends "base/admin_base.html" %}
+
+{% block title %}Delete Department - {{ department.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Delete Department</h2>
+    <p>Are you sure you want to delete the department <strong>{{ department.name }}</strong> from <strong>{{ school.name }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'school_departments' school.id %}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

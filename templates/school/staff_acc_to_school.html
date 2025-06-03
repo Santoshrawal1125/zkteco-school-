@@ -6,11 +6,18 @@
 {% block content %}
 <div class="container mt-5">
 
-    <!-- Header -->
-    <div class="text-center mb-4">
-        <img src="https://img.icons8.com/fluency/96/conference-call.png" alt="Staff Icon" class="mb-3" style="width: 64px;">
-        <h2 class="fw-bold">{{ school.name }}</h2>
-        <p class="text-muted mb-0">List of staff members under {{ school.name }}</p>
+    <!-- Header with Add Staff Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="text-start">
+            <img src="https://img.icons8.com/fluency/96/conference-call.png" alt="Staff Icon" class="mb-2" style="width: 64px;">
+            <h2 class="fw-bold mb-1">{{ school.name }}</h2>
+            <p class="text-muted mb-0">List of staff members under {{ school.name }}</p>
+        </div>
+        <div>
+            <a href="{% url 'add_staff' school.id %}" class="btn btn-success">
+                <i class="bi bi-plus-lg"></i> Add Staff
+            </a>
+        </div>
     </div>
 
     {% if staffs %}
@@ -27,6 +34,7 @@
                     <th>Department</th>
                     <th>Shift</th>
                     <th>FCM Token</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,17 +49,20 @@
                         {% endif %}
                     </td>
                     <td>
-                      <a href="{% url 'user_detail' staff.user.pk %}">
-                        {{ staff.user.get_full_name }}
-                      </a>
+                        <a href="{% url 'user_detail' staff.user.pk %}">
+                            {{ staff.user.get_full_name }}
+                        </a>
                     </td>
-
                     <td>{{ staff.user.username }}</td>
                     <td>{{ staff.user.email }}</td>
                     <td>{{ staff.position }}</td>
                     <td>{{ staff.department.name|default:"—" }}</td>
                     <td>{{ staff.shift.name|default:"—" }}</td>
                     <td class="text-truncate" style="max-width: 200px;">{{ staff.fcm_token|default:"—" }}</td>
+                    <td class="text-end">
+                        <a href="#" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                        <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

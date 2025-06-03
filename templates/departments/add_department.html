@@ -1,0 +1,32 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Add Department{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Header with icon and title -->
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/64/department.png" alt="Add Department Icon" class="mb-2" 
+             onerror="this.onerror=null; this.src='https://img.icons8.com/color/64/books.png'">
+        <h2 class="fw-bold">Add New Department</h2>
+        <p class="text-muted">Fill out the details below to add a new department to <strong>{{ school.name }}</strong>.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="id_name" class="form-label fw-semibold">Department Name</label>
+                <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter department name" required autofocus>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'school_departments' school.id %}" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Add Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

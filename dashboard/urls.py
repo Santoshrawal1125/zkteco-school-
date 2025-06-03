@@ -13,6 +13,8 @@ urlpatterns = [
     path('school_details/<int:pk>/', views.school_details, name='school_details'),
     path('school_delete/<int:pk>/', views.school_delete, name='school_delete'),
     path('student_and_staff/<int:school_id>/', views.student_and_staff, name='student_and_staff'),
+    path('student_and_staff/', views.student_and_staff, name='student_and_staff'),
+
     # staffs according to their school
     path('school/<int:school_id>/department/<int:department_id>/staffs/', views.school_staffs, name='school_staffs'),
 
@@ -33,6 +35,7 @@ urlpatterns = [
 
     # shifts and its related pages
     path('shifts/', views.shift_list, name='shifts'),
+    path('shifts/<int:school_id>/', views.shift_list, name='shifts'),
 
     # USER
     path('users/', views.user_list, name='user_list'),

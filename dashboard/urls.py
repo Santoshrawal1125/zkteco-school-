@@ -17,6 +17,7 @@ urlpatterns = [
 
     # staffs according to their school
     path('school/<int:school_id>/department/<int:department_id>/staffs/', views.school_staffs, name='school_staffs'),
+
     # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
     path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student, name='school_student_classes'),
@@ -24,6 +25,9 @@ urlpatterns = [
     # departments and its related pages
     path('departments/', views.departments, name='departments'),
     path('school/<int:school_id>/departments/', views.school_departments, name='school_departments'),
+    path('school/<int:school_id>/departments/add/', views.add_department, name='add_department'),
+    path('school/<int:school_id>/departments/<int:department_id>/edit/', views.edit_department, name='edit_department'),
+    path('school/<int:school_id>/departments/<int:department_id>/delete/', views.delete_department, name='delete_department'),
 
     # devices and its related pages
     path('schools_list/', views.school_list, name='school_list'),
@@ -42,6 +46,9 @@ urlpatterns = [
 
     # LOGOUT
     path('logout/', views.logout_view, name='logout'),
+
+    #STAFF
+    path('schools/<int:school_id>/staff/add/', views.add_staff, name='add_staff'),
 
     # attendence
     path('users/<int:user_pk>/attendance/add/', views.add_attendance, name='add_attendance'),

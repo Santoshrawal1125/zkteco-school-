@@ -15,6 +15,8 @@ from core.models import (
     School, StudentClass, Department, Device, Shift,
     SchoolAdmin, Staff, Student, Attendance
 )
+import random
+import string
 
 User = get_user_model()
 
@@ -51,6 +53,69 @@ def student_attendance(request):
 
 def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
+
+
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db import IntegrityError
+from django.contrib import messages
+from core.models import School, Staff, Department, Shift, User  
+
+def add_staff(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+
+    # Get department_id from GET request if available
+    department_id = request.GET.get('department_id')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        position = request.POST.get('position')
+        department_id = request.POST.get('department')  # override from POST
+        shift_id = request.POST.get('shift')
+
+        password = f"{username}@123"
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different username.")
+            return redirect(request.path)
+
+        try:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                role='staff'
+            )
+
+            Staff.objects.create(
+                user=user,
+                school=school,
+                position=position,
+                department_id=department_id,
+                shift_id=shift_id
+            )
+
+            messages.success(request, f"Staff added successfully. Default password: {password}")
+            return redirect('school_staffs', school_id=school.id, department_id=department_id)
+
+        except IntegrityError:
+            messages.error(request, "An error occurred while adding the staff. Please try again.")
+            return redirect(request.path)
+
+    context = {
+        'school': school,
+        'school_id': school.id,
+        'department_id': department_id,
+        'departments': Department.objects.filter(school=school),
+        'shifts': Shift.objects.filter(school=school),
+    }
+    return render(request, 'staff/add_staff.html', context)
+
+
+
 
 
 # School views
@@ -166,6 +231,17 @@ def school_class_student(request, school_id, student_class_id):
         'student_class': student_class,
         'students': students
     })
+# Add a new department to a school
+def add_department(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            Department.objects.create(name=name, school=school)
+            return redirect('school_departments', school_id=school.id)
+
+    return render(request, 'departments/add_department.html', {'school': school})
 
 
 # Department views
@@ -179,6 +255,41 @@ def school_departments(request, school_id):
     school = get_object_or_404(School, id=school_id)
     departments = Department.objects.filter(school=school)
     return render(request, 'departments/school_departments.html', {'school': school, 'departments': departments})
+
+def edit_department(request, school_id, department_id):
+    school = get_object_or_404(School, id=school_id)
+    department = get_object_or_404(Department, id=department_id, school=school)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            department.name = name
+            department.save()
+            return redirect('school_departments', school_id=school.id)
+        else:
+            error = "Name cannot be empty."
+            return render(request, 'departments/edit_department.html', {
+                'department': department,
+                'school': school,
+                'error': error
+            })
+
+    return render(request, 'departments/edit_department.html', {
+        'department': department,
+        'school': school
+    })
+
+
+
+def delete_department(request, school_id, department_id):
+    school = get_object_or_404(School, id=school_id)
+    department = get_object_or_404(Department, id=department_id, school=school)
+
+    if request.method == 'POST':
+        department.delete()
+        return redirect('school_departments', school_id=school.id)
+
+    return render(request, 'departments/confirm_delete_department.html', {'department': department, 'school': school})
 
 
 # Device views

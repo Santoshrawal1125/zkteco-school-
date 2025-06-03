@@ -1,20 +1,131 @@
-<form method="post">
-    {% csrf_token %}
-    <label>Date:</label>
-    <input type="date" name="date" value="{{ attendance.arrival_time|date:'Y-m-d' }}" required><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 16px;
+        }
 
-    <label>Arrival Time:</label>
-    <input type="time" name="arrival_time" value="{{ attendance.arrival_time|time:'H:i' }}" required><br>
+        .form-container {
+            max-width: 550px;
+            margin: auto;
+            background: #fff;
+            border-radius: 18px;
+            padding: 30px 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e3e6ea;
+        }
 
-    <label>Departure Time:</label>
-    <input type="time" name="departure_time" value="{{ attendance.departure_time|time:'H:i' }}" required><br>
+        .form-container h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #007bff;
+            text-align: center;
+        }
 
-    <label>Status:</label>
-    <select name="status" required>
-        <option value="present" {% if attendance.status == 'present' %}selected{% endif %}>Present</option>
-        <option value="late" {% if attendance.status == 'late' %}selected{% endif %}>Late</option>
-        <option value="absent" {% if attendance.status == 'absent' %}selected{% endif %}>Absent</option>
-    </select><br>
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #444;
+        }
 
-    <button type="submit">Save Changes</button>
-</form>
+        .form-control,
+        .form-select {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border-radius: 12px;
+            border: 1px solid #dcdfe3;
+            background-color: #fafafa;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            background-color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-outline-secondary {
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .btn {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Edit Attendance</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" class="form-control"
+                   value="{{ attendance.arrival_time|date:'Y-m-d' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="arrival_time">Arrival Time:</label>
+            <input type="time" id="arrival_time" name="arrival_time" class="form-control"
+                   value="{{ attendance.arrival_time|time:'H:i' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="departure_time">Departure Time:</label>
+            <input type="time" id="departure_time" name="departure_time" class="form-control"
+                   value="{{ attendance.departure_time|time:'H:i' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status" class="form-select" required>
+                <option value="present" {% if attendance.status == 'present' %}selected{% endif %}>Present</option>
+                <option value="late" {% if attendance.status == 'late' %}selected{% endif %}>Late</option>
+                <option value="absent" {% if attendance.status == 'absent' %}selected{% endif %}>Absent</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+    </form>
+
+    <a href="{% url 'user_detail' user_obj.pk %}" class="btn btn-outline-secondary w-100">Back to User Details</a>
+</div>
+
+</body>
+</html>

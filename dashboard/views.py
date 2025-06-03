@@ -1,12 +1,14 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import logout, get_user_model
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseBadRequest
 from django.utils.dateparse import parse_date, parse_time
-
+# Authentication views
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from core.models import (
     School, StudentClass, Department, Device, Shift,
     SchoolAdmin, Staff, Student, Attendance
@@ -90,7 +92,8 @@ def school_staffs(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id)
     staffs = Staff.objects.filter(school=school, department=department)
-    return render(request, 'school/staff_acc_to_school.html', {'school': school,department:'department', 'staffs': staffs})
+    return render(request, 'school/staff_acc_to_school.html',
+                  {'school': school, department: 'department', 'staffs': staffs})
 
 
 # Classes by school
@@ -98,6 +101,19 @@ def school_student_classes(request, school_id):
     school = get_object_or_404(School, id=school_id)
     student_classes = StudentClass.objects.filter(school=school)
     return render(request, 'school/school_classes.html', {'school': school, 'student_classes': student_classes})
+
+
+# Students by classes
+
+def school_class_student(request, school_id, student_class_id):
+    school = get_object_or_404(School, id=school_id)
+    student_class = get_object_or_404(StudentClass, id=student_class_id)
+    students = Student.objects.filter(school=school, student_class=student_class)
+    return render(request, 'school/studentbyclass.html', {
+        'school': school,
+        'student_class': student_class,
+        'students': students
+    })
 
 
 # Department views
@@ -216,7 +232,6 @@ def delete_user(request, pk):
     return redirect('user_list')
 
 
-# Authentication views
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -227,6 +242,11 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
 
         if user:
+            # Restrict students and staff from logging in
+            if user.role in ['student', 'staff']:
+                messages.error(request, "You are not allowed to access the dashboard.")
+                return redirect('login')  # Stay on login page
+
             login(request, user)
             return redirect('dashboard')
         else:

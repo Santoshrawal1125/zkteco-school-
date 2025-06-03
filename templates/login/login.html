@@ -31,9 +31,21 @@
 <body>
     <div class="container d-flex justify-content-center">
         <div class="login-container text-center">
-            <!-- Bootstrap logo -->
-            <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" alt="Bootstrap Logo" class="logo">
 
+            <!-- Django Messages -->
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show text-start" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            <!-- Logo and Heading -->
+            <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" alt="Bootstrap Logo" class="logo">
             <h3 class="mb-4">Login to ZKTeco School</h3>
 
             <!-- Login Form -->

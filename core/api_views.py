@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.password_validation import validate_password
 
 logger = logging.getLogger(__name__)
 
@@ -229,3 +230,34 @@ def update_fcm_token(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+class ChangePasswordView(APIView):
+
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+        confirm_password = request.data.get("confirm_password")
+
+        if not old_password or not new_password or not confirm_password:
+            return Response({"error": "All fields are required."}, status=400)
+
+        if not user.check_password(old_password):
+            return Response({"error": "Old password is incorrect."}, status=400)
+
+        if new_password != confirm_password:
+            return Response({"error": "New passwords do not match."}, status=400)
+
+        try:
+            validate_password(new_password, user=user)
+        except Exception as e:
+            return Response({"error": list(e)}, status=400)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"message": "Password changed successfully."}, status=200)

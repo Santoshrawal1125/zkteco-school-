@@ -52,11 +52,13 @@
 
                         <!-- Management Section -->
                         <div class="sb-sidenav-menu-heading">Management</div>
-                        <a class="nav-link" href="{% url 'attendance' %}">
+                        {% if not user.is_superuser %}
+                        <a class="nav-link" href="{% url 'student_and_staff' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-calendar-check"></i></div>
                             Attendance
                         </a>
-
+                        {% endif %}
+                        {% if user.is_superuser %}
                         <a class="nav-link" href="{% url 'school_list' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-desktop"></i></div>
                             Devices
@@ -69,6 +71,8 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-school"></i></div>
                             Schools
                         </a>
+                        {% endif %}
+
 
                         <a class="nav-link" href="{% url 'shifts' %}">
                              <div class="sb-nav-link-icon"><i class="fas fa-clock"></i></div>
@@ -86,10 +90,13 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
                             Students
                         </a>
+                        {% if user.is_superuser %}
                         <a class="nav-link" href="{% url 'user_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Users
                         </a>
+                        {% endif %}
+
 
                     </div>
                 </div>

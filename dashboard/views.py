@@ -9,6 +9,8 @@ from django.utils.dateparse import parse_date, parse_time
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 from core.models import (
     School, StudentClass, Department, Device, Shift,
     SchoolAdmin, Staff, Student, Attendance
@@ -17,8 +19,24 @@ from core.models import (
 User = get_user_model()
 
 
+def get_user_school(user):
+    if user.role == 'school_admin':
+        try:
+            return user.schooladmin.school
+        except SchoolAdmin.DoesNotExist:
+            return None
+    return None
+
+
 # Dashboard
 def dashboard(request):
+    context = {}
+
+    # Only add `school` for school admins
+    if request.user.is_authenticated and request.user.role == 'school_admin':
+        school = get_user_school(request.user)
+        if school:
+            context['school'] = school
     return render(request, 'base/admin_base.html')
 
 
@@ -82,16 +100,50 @@ def school_delete(request, pk):
     return redirect('school_details', pk=pk)
 
 
-def student_and_staff(request, school_id):
+def student_and_staff(request, school_id=None):
+    user = request.user
+
+    # Determine the correct school ID based on user role
+    if user.role == 'school_admin':
+        school_id = request.session.get('school_id')
+        if not school_id:
+            return HttpResponseBadRequest("No school assigned to your account.")
+
+    elif user.role == 'admin':
+        if not school_id:
+            return HttpResponseBadRequest("Please provide a school to view.")
+
+    else:
+        # Print for debugging, you can remove this later
+        print("User role:", user.role)
+        return HttpResponseForbidden("Access denied.")
+
+    # Fetch the school
     school = get_object_or_404(School, id=school_id)
-    return render(request, 'school/studentandstaff.html', {'school': school})
+
+    # Fetch students and staff of this school
+    students = Student.objects.filter(school=school)
+    staff = Staff.objects.filter(school=school)
+
+    context = {
+        'school': school,
+        'students': students,
+        'staff': staff,
+    }
+
+    return render(request, 'school/studentandstaff.html', context)
 
 
 # Staff views by school
 def school_staffs(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id)
+    user_school = get_user_school(request.user)
+    if request.user.role == 'school_admin' and school != user_school:
+        return HttpResponseForbidden("You are not allowed to access this school's data.")
+
     staffs = Staff.objects.filter(school=school, department=department)
+
     return render(request, 'school/staff_acc_to_school.html',
                   {'school': school, department: 'department', 'staffs': staffs})
 
@@ -142,8 +194,28 @@ def devices_by_school(request, school_id):
 
 
 # Shift views
-def shift_list(request):
-    shifts = Shift.objects.select_related('school').all().order_by('school__name', 'start_time')
+
+
+def shift_list(request, school_id=None):
+    user = request.user
+
+    if user.role == 'school_admin':
+        school_id = request.session.get('school_id')
+        if not school_id:
+            return HttpResponseBadRequest("No school assigned to your account.")
+
+    elif user.role == 'admin':
+        if not school_id:
+            return HttpResponseBadRequest("Please provide a school to view.")
+    else:
+        return HttpResponseForbidden("Access Denied.")
+
+    # Get the school object to validate school_id
+    school = get_object_or_404(School, id=school_id)
+
+    # Get all shifts for this school ordered by school name and start_time
+    shifts = Shift.objects.filter(school=school).order_by('school__name', 'start_time')
+
     return render(request, 'shift/shift_list.html', {'shifts': shifts})
 
 
@@ -245,10 +317,25 @@ def login_view(request):
             # Restrict students and staff from logging in
             if user.role in ['student', 'staff']:
                 messages.error(request, "You are not allowed to access the dashboard.")
-                return redirect('login')  # Stay on login page
+                return redirect('login')
 
+            # Log the user in first to create a session
             login(request, user)
+
+            if user.role == 'school_admin':
+                try:
+                    school_admin = SchoolAdmin.objects.get(user=user)
+                    request.session['school_id'] = school_admin.school.id
+                except SchoolAdmin.DoesNotExist:
+                    messages.error(request, "No school assigned to your account. Please contact the administrator.")
+                    logout(request)
+                    return redirect('login')
+            else:
+                # Remove school_id from session if any
+                request.session.pop('school_id', None)
+
             return redirect('dashboard')
+
         else:
             messages.error(request, "Invalid username or password.")
 

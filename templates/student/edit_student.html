@@ -1,0 +1,26 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Edit Student</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name</label>
+            <input id="first_name" name="first_name" type="text" class="form-control" value="{{ user.first_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input id="last_name" name="last_name" type="text" class="form-control" value="{{ user.last_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" name="email" type="email" class="form-control" value="{{ user.email }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Student</button>
+        <a href="{% url 'school_class_student' school_id student_class_id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

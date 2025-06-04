@@ -310,6 +310,93 @@ def school_class_student(request, school_id, student_class_id):
         'students': students
     })
 
+#add student
+def add_student(request, school_id, class_id):
+    school = get_object_or_404(School, id=school_id)
+    student_class = get_object_or_404(StudentClass, id=class_id)
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+
+        if not username or not email:
+            return render(request, 'student/add_student.html', {
+                'error': 'Username and Email are required.',
+                'school': school,
+                'student_class': student_class
+            })
+
+        # Set password as username@123
+        password = f"{username}@123"
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            password=password
+        )
+
+        Student.objects.create(user=user, school=school, student_class=student_class)
+
+        return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
+
+    return render(request, 'student/add_student.html', {
+        'school': school,
+        'student_class': student_class
+    })
+
+#delete student 
+
+
+def delete_student(request, school_id, class_id, student_id):
+    school = get_object_or_404(School, id=school_id)
+    student_class = get_object_or_404(StudentClass, id=class_id)
+    student = get_object_or_404(Student, id=student_id, school=school, student_class=student_class)
+
+    if request.method == "POST":
+        user = student.user
+        student.delete()  # delete the student record
+        user.delete()     # delete the associated user account
+
+        messages.success(request, "Student deleted successfully.")
+        return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
+
+    # For safety, if GET request, show a confirmation page or redirect
+    return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
+
+
+# Edit student
+
+def edit_student(request, school_id, student_class_id, student_id):
+    student = get_object_or_404(Student, id=student_id, school_id=school_id, student_class_id=student_class_id)
+    user = student.user
+
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+
+        # Validate as needed...
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+
+        return redirect('school_class_student', school_id=school_id, student_class_id=student_class_id)
+
+    return render(request, 'student/edit_student.html', {
+        'student': student,
+        'school_id': school_id,
+        'student_class_id': student_class_id,
+        'user': user,
+    })
+
+
+
 
 # CRUD FOR CLASS
 

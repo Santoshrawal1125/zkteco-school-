@@ -18,6 +18,12 @@ urlpatterns = [
     # staffs according to their school
     path('school/<int:school_id>/department/<int:department_id>/staffs/', views.school_staffs, name='school_staffs'),
 
+    #student add
+    path('school/<int:school_id>/class/<int:class_id>/students/add/', views.add_student, name='add_student'),
+    path('dashboard/school/<int:school_id>/class/<int:class_id>/student/<int:student_id>/delete/', views.delete_student, name='delete_student'),
+    path('dashboard/school/<int:school_id>/class/<int:student_class_id>/students/<int:student_id>/edit/', views.edit_student, name='edit_student'),
+
+
     # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
     path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student, name='school_class_student'),

@@ -1,0 +1,48 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Add Class{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Header with icon and title -->
+    <div class="text-center mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="Add Class Icon" class="mb-2" style="width: 64px;">
+        <h2 class="fw-bold">Add New Class</h2>
+        <p class="text-muted">Fill out the details below to add a new class to <strong>{{ school.name }}</strong>.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label fw-semibold">Class Name</label>
+                <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter class name" required autofocus value="{{ name|default:'' }}">
+            </div>
+
+            <!-- If you want to add shift selection, uncomment below and pass shifts in context -->
+
+            <div class="mb-3">
+                <label for="id_shift" class="form-label fw-semibold">Shift</label>
+                <select id="id_shift" name="shift" class="form-select">
+                    <option value="">-- Select Shift --</option>
+                    {% for shift in shifts %}
+                        <option value="{{ shift.id }}" {% if shift.id|stringformat:"s" == shift_id|stringformat:"s" %}selected{% endif %}>{{ shift.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'school_student_classes' school.id %}" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Add Class</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

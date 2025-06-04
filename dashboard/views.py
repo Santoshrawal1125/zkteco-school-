@@ -39,7 +39,7 @@ def dashboard(request):
         school = get_user_school(request.user)
         if school:
             context['school'] = school
-    return render(request, 'base/admin_base.html')
+    return render(request, 'dashboard/dashboard.html')
 
 
 # Attendance views
@@ -55,13 +55,11 @@ def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
 
 
-
-
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from django.contrib import messages
-from core.models import School, Staff, Department, Shift, User  
+from core.models import School, Staff, Department, Shift, User
+
 
 def add_staff(request, school_id):
     school = get_object_or_404(School, id=school_id)
@@ -113,9 +111,6 @@ def add_staff(request, school_id):
         'shifts': Shift.objects.filter(school=school),
     }
     return render(request, 'staff/add_staff.html', context)
-
-
-
 
 
 # School views
@@ -231,6 +226,81 @@ def school_class_student(request, school_id, student_class_id):
         'student_class': student_class,
         'students': students
     })
+
+
+# CRUD FOR CLASS
+
+# Add a new class
+def add_class(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+    shifts = Shift.objects.filter(school=school)  # Get only shifts of this school
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        shift_id = request.POST.get('shift')
+
+        if name:
+            new_class = StudentClass(name=name, school=school)
+            if shift_id:
+                new_class.shift_id = shift_id
+            new_class.save()
+            return redirect('school_student_classes', school_id=school.id)
+        else:
+            error = "Class name is required."
+            return render(request, 'school/add_class.html', {
+                'school': school,
+                'error': error,
+                'name': name,
+                'shift_id': shift_id,
+                'shifts': shifts
+            })
+
+    return render(request, 'school/add_class.html', {'school': school, 'shifts': shifts})
+
+
+# Edit an existing class
+# ✅ Edit Class View
+def edit_class(request, school_id, class_id):
+    school = get_object_or_404(School, id=school_id)
+    student_class = get_object_or_404(StudentClass, id=class_id, school=school)
+    shifts = Shift.objects.filter(school=school)
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        shift_id = request.POST.get('shift')
+
+        if name:
+            student_class.name = name
+            student_class.shift_id = shift_id if shift_id else None
+            student_class.save()
+            return redirect('school_student_classes', school_id=school.id)
+        else:
+            error = "Class name is required."
+            return render(request, 'school/edit_class.html', {
+                'school': school,
+                'student_class': student_class,
+                'error': error,
+                'shifts': shifts
+            })
+
+    return render(request, 'school/edit_class.html', {
+        'school': school,
+        'student_class': student_class,
+        'shifts': shifts
+    })
+
+
+# Delete a class
+# ✅ Delete Class View
+def delete_class(request, school_id, class_id):
+    school = get_object_or_404(School, id=school_id)
+    student_class = get_object_or_404(StudentClass, id=class_id, school=school)
+
+    if request.method == 'POST':
+        student_class.delete()
+    return redirect('school_student_classes', school_id=school.id)
+
+
 # Add a new department to a school
 def add_department(request, school_id):
     school = get_object_or_404(School, id=school_id)
@@ -256,6 +326,7 @@ def school_departments(request, school_id):
     departments = Department.objects.filter(school=school)
     return render(request, 'departments/school_departments.html', {'school': school, 'departments': departments})
 
+
 def edit_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id, school=school)
@@ -280,7 +351,6 @@ def edit_department(request, school_id, department_id):
     })
 
 
-
 def delete_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id, school=school)
@@ -302,6 +372,57 @@ def devices_by_school(request, school_id):
     school = get_object_or_404(School, pk=school_id)
     devices = Device.objects.filter(school=school)
     return render(request, 'device/devices_by_school.html', {'school': school, 'devices': devices})
+
+
+@login_required
+def add_device(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+
+    if request.method == 'POST':
+        serial_number = request.POST.get('serial_number')
+        location = request.POST.get('location')
+
+        if not serial_number:
+            return HttpResponseBadRequest("Serial number is required.")
+
+        Device.objects.create(
+            school=school,
+            serial_number=serial_number,
+            location=location
+        )
+        return redirect('devices_by_school', school_id=school.id)
+
+    return render(request, 'device/add_device.html', {'school': school})
+
+
+@login_required
+def edit_device(request, device_id):
+    device = get_object_or_404(Device, id=device_id)
+
+    if request.method == 'POST':
+        serial_number = request.POST.get('serial_number')
+        location = request.POST.get('location')
+
+        if not serial_number:
+            return HttpResponseBadRequest("Serial number is required.")
+
+        device.serial_number = serial_number
+        device.location = location
+        device.save()
+        return redirect('devices_by_school', school_id=device.school.id)
+
+    return render(request, 'device/edit_device.html', {
+        'school': device.school,
+        'device': device
+    })
+
+
+@login_required
+def delete_device(request, device_id):
+    device = get_object_or_404(Device, id=device_id)
+    school_id = device.school.id
+    device.delete()
+    return redirect('devices_by_school', school_id=school_id)
 
 
 # Shift views

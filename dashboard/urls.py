@@ -20,7 +20,10 @@ urlpatterns = [
 
     # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
-    path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student, name='school_student_classes'),
+    path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student, name='school_class_student'),
+    path('school/<int:school_id>/classes/add/', views.add_class, name='add_class'),
+    path('school/<int:school_id>/classes/<int:class_id>/edit/', views.edit_class, name='edit_class'),
+    path('school/<int:school_id>/classes/<int:class_id>/delete/', views.delete_class, name='delete_class'),
 
     # departments and its related pages
     path('departments/', views.departments, name='departments'),
@@ -32,6 +35,9 @@ urlpatterns = [
     # devices and its related pages
     path('schools_list/', views.school_list, name='school_list'),
     path('schools/<int:school_id>/devices/', views.devices_by_school, name='devices_by_school'),
+    path('school/<int:school_id>/devices/add/', views.add_device, name='add_device'),
+    path('device/<int:device_id>/edit/', views.edit_device, name='edit_device'),
+    path('device/<int:device_id>/delete/', views.delete_device, name='delete_device'),
 
     # shifts and its related pages
     path('shifts/', views.shift_list, name='shifts'),

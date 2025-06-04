@@ -1,0 +1,10 @@
+{% extends "base/admin_base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Welcome to your Dashboard{% if school %}, {{ school.name }}{% endif %}!</h1>
+    <!-- Add dashboard content here -->
+</div>
+{% endblock %}

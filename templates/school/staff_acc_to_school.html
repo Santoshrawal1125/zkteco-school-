@@ -6,19 +6,27 @@
 {% block content %}
 <div class="container mt-5">
 
-    <!-- Header with Add Staff Button -->
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="text-start">
             <img src="https://img.icons8.com/fluency/96/conference-call.png" alt="Staff Icon" class="mb-2" style="width: 64px;">
             <h2 class="fw-bold mb-1">{{ school.name }}</h2>
             <p class="text-muted mb-0">List of staff members under {{ school.name }}</p>
         </div>
-        <div>
-            <a href="{% url 'add_staff' school.id %}" class="btn btn-success">
-                <i class="bi bi-plus-lg"></i> Add Staff
-            </a>
-        </div>
+        <a href="{% url 'add_staff' school.id %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Add Staff
+        </a>
     </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
 
     {% if staffs %}
     <div class="table-responsive">
@@ -60,8 +68,36 @@
                     <td>{{ staff.shift.name|default:"—" }}</td>
                     <td class="text-truncate" style="max-width: 200px;">{{ staff.fcm_token|default:"—" }}</td>
                     <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-outline-primary me-1">Edit</a>
-                        <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                        <div class="btn-group gap-1">
+                            <a href="{% url 'edit_staff' school_id=staff.school.id staff_id=staff.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <!-- Delete Button -->
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteStaffModal{{ staff.id }}">
+                                Delete
+                            </button>
+                        </div>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteStaffModal{{ staff.id }}" tabindex="-1" aria-labelledby="deleteStaffModalLabel{{ staff.id }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="deleteStaffModalLabel{{ staff.id }}">Delete Confirmation</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                Are you sure you want to delete staff <strong>{{ staff.user.get_full_name }}</strong>?
+                              </div>
+                              <div class="modal-footer">
+                                <form method="post" action="{% url 'delete_staff' school_id=staff.school.id staff_id=staff.id %}">
+                                  {% csrf_token %}
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                  <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- End Modal -->
                     </td>
                 </tr>
                 {% endfor %}
@@ -70,9 +106,9 @@
     </div>
     {% else %}
     <div class="text-center mt-4">
-        <p class="text-muted">No staff found for this school.</p>
+        <img src="https://img.icons8.com/fluency/96/no-data.png" alt="No staff">
+        <p class="text-muted mt-2">No staff found for this school.</p>
     </div>
     {% endif %}
-
 </div>
 {% endblock %}

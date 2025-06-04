@@ -1,0 +1,34 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Edit Shift{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2>Edit Shift for <strong>{{ school.name }}</strong></h2>
+    </div>
+
+    <form method="post" class="w-50 mx-auto">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="name" class="form-label">Shift Name</label>
+            <input type="text" id="name" name="name" value="{{ shift.name }}" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="start_time" class="form-label">Start Time</label>
+            <input type="time" id="start_time" name="start_time" value="{{ shift.start_time|time:'H:i' }}" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="end_time" class="form-label">End Time</label>
+            <input type="time" id="end_time" name="end_time" value="{{ shift.end_time|time:'H:i' }}" class="form-control" required>
+        </div>
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Update Shift</button>
+            <a href="{% url 'shifts' school.id %}" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

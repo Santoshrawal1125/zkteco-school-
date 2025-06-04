@@ -1,0 +1,18 @@
+{% extends "base.html" %}  {# or your main layout file #}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-danger">
+        <div class="card-body">
+            <h3 class="text-danger">Confirm Deletion</h3>
+            <p>Are you sure you want to delete <strong>{{ staff.user.username }}</strong> from staff?</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <a href="{% url 'school_staffs' school_id=staff.school.id department_id=staff.department.id %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

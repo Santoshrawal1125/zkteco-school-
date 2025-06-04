@@ -14,7 +14,10 @@ from django.contrib.auth.decorators import login_required
 from core.models import (
     School, StudentClass, Department, Device, Shift,
     SchoolAdmin, Staff, Student, Attendance
+
 )
+from django.db import transaction
+
 import random
 import string
 
@@ -113,6 +116,86 @@ def add_staff(request, school_id):
         'shifts': Shift.objects.filter(school=school),
     }
     return render(request, 'staff/add_staff.html', context)
+
+
+
+from django.views.decorators.http import require_POST
+
+@require_POST
+def delete_staff(request, school_id, staff_id):
+    staff = get_object_or_404(Staff, id=staff_id, school__id=school_id)
+    department_id = staff.department.id if staff.department else None
+
+    try:
+        with transaction.atomic():
+            user = staff.user
+            staff.delete()
+            user.delete()
+            messages.success(request, "Staff deleted successfully.")
+    except Exception as e:
+        messages.error(request, f"Error deleting staff: {e}")
+
+    return redirect('school_staffs', school_id=school_id, department_id=department_id)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+
+
+
+def edit_staff(request, school_id, staff_id):
+    staff = get_object_or_404(Staff, id=staff_id, school__id=school_id)
+
+    if request.method == 'POST':
+        # Get updated data from POST request
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        position = request.POST.get('position')
+        department_id = request.POST.get('department')
+        shift_id = request.POST.get('shift')
+
+        # Update staff user info
+        user = staff.user
+        user.first_name = name.split(' ')[0] if name else ''
+        user.last_name = ' '.join(name.split(' ')[1:]) if name and len(name.split(' ')) > 1 else ''
+        user.email = email
+        user.save()
+
+        # Update staff fields
+        staff.position = position
+        if department_id:
+            staff.department_id = department_id
+        if shift_id:
+            staff.shift_id = shift_id
+
+        staff.save()
+        messages.success(request, "Staff updated successfully.")
+
+        # Safe redirect: try staff.department.id else fallback to some default or handle error
+        redirect_department_id = staff.department.id if staff.department else None
+        if redirect_department_id is None:
+            # fallback: pick the first department of the school or just 0 (if URL accepts)
+            first_dept = Department.objects.filter(school_id=school_id).first()
+            redirect_department_id = first_dept.id if first_dept else 0
+
+        return redirect('school_staffs', school_id=school_id, department_id=redirect_department_id)
+
+    # GET request, show form with existing data
+    departments = Department.objects.filter(school_id=school_id)
+    shifts = Shift.objects.filter(school_id=school_id)
+
+    context = {
+        'staff': staff,
+        'departments': departments,
+        'shifts': shifts,
+        'school_id': school_id,
+    }
+    return render(request, 'staff/edit_staff.html', context)
+
+
+
+
+
 
 
 
@@ -321,15 +404,78 @@ def shift_list(request, school_id=None):
     else:
         return HttpResponseForbidden("Access Denied.")
 
-    # Get the school object to validate school_id
+    # ✅ Get the school object
     school = get_object_or_404(School, id=school_id)
 
-    # Get all shifts for this school ordered by school name and start_time
+    # ✅ Get all shifts for this school
     shifts = Shift.objects.filter(school=school).order_by('school__name', 'start_time')
 
-    return render(request, 'shift/shift_list.html', {'shifts': shifts})
+    # ✅ Return school in context
+    return render(request, 'shift/shift_list.html', {
+        'shifts': shifts,
+        'school': school,  # ✅ This line fixes the template error
+    })
 
 
+#add shift
+def add_shift(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        if name and start_time and end_time:
+            Shift.objects.create(
+                school=school,
+                name=name,
+                start_time=start_time,
+                end_time=end_time
+            )
+            messages.success(request, "Shift added successfully.")
+            return redirect('shifts', school_id=school.id)
+        else:
+            messages.error(request, "All fields are required.")
+
+    return render(request, 'shift/add_shift.html', {'school': school})
+
+#delete shift
+def delete_shift(request, id):
+    shift = get_object_or_404(Shift, id=id)
+
+    if request.method == "POST":
+        shift_name = shift.name
+        shift.delete()
+        messages.success(request, f"Shift '{shift_name}' has been successfully deleted.")
+        return redirect('shifts', school_id=shift.school.id)
+
+    messages.error(request, "Invalid request method.")
+    return redirect('shifts', school_id=shift.school.id)
+
+#shift edit 
+
+
+def edit_shift(request, id):
+    shift = get_object_or_404(Shift, id=id)
+    school = shift.school  # Keep school for redirect and template
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+
+        # Basic validation could be added here
+
+        shift.name = name
+        shift.start_time = start_time
+        shift.end_time = end_time
+        shift.save()
+
+        messages.success(request, "Shift updated successfully.")
+        return redirect('shifts', school_id=school.id)
+
+    return render(request, 'shift/edit_shift.html', {'shift': shift, 'school': school})
 # User management views
 def user_list(request):
     users = User.objects.all()

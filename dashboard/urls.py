@@ -36,6 +36,10 @@ urlpatterns = [
     # shifts and its related pages
     path('shifts/', views.shift_list, name='shifts'),
     path('shifts/<int:school_id>/', views.shift_list, name='shifts'),
+    path('shifts/add/<int:school_id>/', views.add_shift, name='add_shift'), 
+    path('delete/<int:id>/', views.delete_shift, name='delete_shift'),
+    path('shifts/edit/<int:id>/', views.edit_shift, name='edit_shift'),
+
 
     # USER
     path('users/', views.user_list, name='user_list'),
@@ -49,6 +53,9 @@ urlpatterns = [
 
     #STAFF
     path('schools/<int:school_id>/staff/add/', views.add_staff, name='add_staff'),
+    path('school/<int:school_id>/staff/delete/<int:staff_id>/', views.delete_staff, name='delete_staff'),
+    path('school/<int:school_id>/staff/edit/<int:staff_id>/', views.edit_staff, name='edit_staff'),
+
 
     # attendence
     path('users/<int:user_pk>/attendance/add/', views.add_attendance, name='add_attendance'),

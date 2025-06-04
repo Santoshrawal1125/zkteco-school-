@@ -37,6 +37,7 @@
         </div>
 
         <!-- Shift Section -->
+        {% if user.is_superuser %}
         <div class="col-md-4 col-sm-12 mb-4">
             <a href="{% url 'shifts' school.id %}" class="text-decoration-none">
                 <div class="rounded-3 bg-warning text-dark p-4 h-100 shadow text-center">
@@ -48,6 +49,7 @@
                 </div>
             </a>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

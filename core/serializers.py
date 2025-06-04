@@ -64,12 +64,9 @@ class StudentSerializers(serializers.ModelSerializer):
 
 
 class AttendanceSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = Attendance
         fields = "__all__"
-
-
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -79,5 +76,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add extra responses here
         data['user_id'] = self.user.id
         data['username'] = self.user.username
+        data['user_role'] = self.user.role
 
         return data

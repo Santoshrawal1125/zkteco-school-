@@ -13,7 +13,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from core.models import (
     School, StudentClass, Department, Device, Shift,
-    SchoolAdmin, Staff, Student, Attendance
+    SchoolAdmin, Staff, Student, Attendance,User
 
 )
 from django.db import transaction
@@ -59,10 +59,9 @@ def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db import IntegrityError
-from django.contrib import messages
-from core.models import School, Staff, Department, Shift, User
+
+
+
 
 
 def add_staff(request, school_id):
@@ -73,6 +72,8 @@ def add_staff(request, school_id):
 
     if request.method == 'POST':
         username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         position = request.POST.get('position')
         department_id = request.POST.get('department')  # override from POST
@@ -89,7 +90,9 @@ def add_staff(request, school_id):
                 username=username,
                 email=email,
                 password=password,
-                role='staff'
+                role='staff',
+                first_name=first_name,
+                last_name=last_name
             )
 
             Staff.objects.create(

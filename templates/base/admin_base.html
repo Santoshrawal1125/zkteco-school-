@@ -20,7 +20,7 @@
 <body class="sb-nav-fixed">
     <!-- Top Navigation Bar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="#">Admin Dashboard</a>
+        <a class="navbar-brand ps-3" href="{% url 'dashboard' %}">Admin Dashboard</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
         <div class="d-none d-md-inline-block ms-auto me-0 me-md-3 my-2 my-md-0"></div>
 
@@ -45,7 +45,7 @@
 
                         <!-- Core Section -->
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="{% url 'dashboard' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -73,11 +73,12 @@
                         </a>
                         {% endif %}
 
-
+                        {% if not user.is_superuser %}
                         <a class="nav-link" href="{% url 'shifts' %}">
                              <div class="sb-nav-link-icon"><i class="fas fa-clock"></i></div>
                             Shift
                         </a>
+                        {% endif %}
                         <a class="nav-link" href="#">
                             <div class="sb-nav-link-icon"><i class="fas fa-users-cog"></i></div>
                             Staffs

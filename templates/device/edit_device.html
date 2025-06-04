@@ -14,14 +14,14 @@
         {% csrf_token %}
 
         <div class="mb-3">
-            <label for="serial_number" class="form-label">Serial Number</label>
-            <input type="text" id="serial_number" name="serial_number" class="form-control"
+            <label for="id_serial_number" class="form-label">Serial Number</label>
+            <input type="text" id="id_serial_number" name="serial_number" class="form-control"
                    value="{{ device.serial_number }}" required>
         </div>
 
         <div class="mb-3">
-            <label for="location" class="form-label">Location</label>
-            <input type="text" id="location" name="location" class="form-control"
+            <label for="id_location" class="form-label">Location (Optional)</label>
+            <input type="text" id="id_location" name="location" class="form-control"
                    value="{{ device.location }}">
         </div>
 

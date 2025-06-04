@@ -17,6 +17,7 @@ from core.models import (
 
 )
 from django.db import transaction
+from django.db import IntegrityError
 
 import random
 import string
@@ -116,8 +117,8 @@ def add_staff(request, school_id):
     return render(request, 'staff/add_staff.html', context)
 
 
-
 from django.views.decorators.http import require_POST
+
 
 @require_POST
 def delete_staff(request, school_id, staff_id):
@@ -138,7 +139,6 @@ def delete_staff(request, school_id, staff_id):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-
 
 
 def edit_staff(request, school_id, staff_id):
@@ -189,11 +189,6 @@ def edit_staff(request, school_id, staff_id):
         'school_id': school_id,
     }
     return render(request, 'staff/edit_staff.html', context)
-
-
-
-
-
 
 
 # School views
@@ -625,7 +620,7 @@ def shift_list(request, school_id=None):
     })
 
 
-#add shift
+# add shift
 def add_shift(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -648,7 +643,8 @@ def add_shift(request, school_id):
 
     return render(request, 'shift/add_shift.html', {'school': school})
 
-#delete shift
+
+# delete shift
 def delete_shift(request, id):
     shift = get_object_or_404(Shift, id=id)
 
@@ -661,7 +657,8 @@ def delete_shift(request, id):
     messages.error(request, "Invalid request method.")
     return redirect('shifts', school_id=shift.school.id)
 
-#shift edit 
+
+# shift edit
 
 
 def edit_shift(request, id):
@@ -684,6 +681,8 @@ def edit_shift(request, id):
         return redirect('shifts', school_id=school.id)
 
     return render(request, 'shift/edit_shift.html', {'shift': shift, 'school': school})
+
+
 # User management views
 def user_list(request):
     users = User.objects.all()
@@ -898,3 +897,119 @@ def delete_attendance(request, user_pk, att_pk):
     attendance.delete()
     messages.success(request, "Attendance record deleted.")
     return redirect('user_detail', pk=user_pk)
+
+
+# 1. List all SchoolAdmins
+def school_admin_list(request):
+    schools = School.objects.select_related('schooladmin__user').all()
+    return render(request, 'school_admin/school_admin_list.html', {'schools': schools})
+
+
+# 2. Add SchoolAdmin
+
+
+def add_school_admin(request):
+    schools = School.objects.all()
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        school_id = request.POST.get('school')
+
+        try:
+            school = get_object_or_404(School, id=school_id)
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                role='school_admin',
+                first_name=first_name,
+                last_name=last_name,
+            )
+            SchoolAdmin.objects.create(user=user, school=school)
+            messages.success(request, "School admin created successfully.")
+            return redirect('school_admin_list')
+
+        except IntegrityError:
+            messages.error(request, "This school already has an assigned admin.")
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+
+        # Fallthrough - re-render the form with old values
+        return render(request, 'school_admin/add_school_admin.html', {
+            'schools': schools,
+            'username': username,
+            'email': email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'school_id': school_id,
+        })
+
+    return render(request, 'school_admin/add_school_admin.html', {'schools': schools})
+
+
+# 3. Edit SchoolAdmin
+def edit_school_admin(request, pk):
+    school_admin = get_object_or_404(SchoolAdmin, pk=pk)
+    schools = School.objects.all()
+    user = school_admin.user
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        password = request.POST.get('password')  # optional
+        school_id = request.POST.get('school')
+
+        if not all([username, email, first_name, last_name, school_id]):
+            messages.error(request, "All fields except password are required.")
+            return render(request, 'school_admin/edit_school_admin.html', {
+                'school_admin': school_admin,
+                'schools': schools,
+                'username': username,
+                'email': email,
+                'first_name': first_name,
+                'last_name': last_name,
+                'school_id': school_id,
+            })
+
+        # Update user fields
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        if password:
+            user.set_password(password)
+        user.save()
+
+        # Update assigned school
+        school = get_object_or_404(School, id=school_id)
+        school_admin.school = school
+        school_admin.save()
+
+        messages.success(request, "School Admin updated successfully.")
+        return redirect('school_admin_list')
+
+    # GET request — prefill form with existing data
+    return render(request, 'school_admin/edit_school_admin.html', {
+        'school_admin': school_admin,
+        'schools': schools,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'school_id': school_admin.school.id if school_admin.school else '',
+    })
+
+# 4. Delete SchoolAdmin
+def delete_school_admin(request, pk):
+    school_admin = get_object_or_404(SchoolAdmin, pk=pk)
+    user = school_admin.user
+    school_admin.delete()
+    user.delete()  # also remove the user account
+    messages.success(request, "School Admin deleted successfully.")
+    return redirect('school_admin_list')

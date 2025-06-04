@@ -26,7 +26,8 @@ urlpatterns = [
 
     # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
-    path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student, name='school_class_student'),
+    path('school/<int:school_id>/classes/<int:student_class_id>/student/', views.school_class_student,
+         name='school_class_student'),
     path('school/<int:school_id>/classes/add/', views.add_class, name='add_class'),
     path('school/<int:school_id>/classes/<int:class_id>/edit/', views.edit_class, name='edit_class'),
     path('school/<int:school_id>/classes/<int:class_id>/delete/', views.delete_class, name='delete_class'),
@@ -36,7 +37,8 @@ urlpatterns = [
     path('school/<int:school_id>/departments/', views.school_departments, name='school_departments'),
     path('school/<int:school_id>/departments/add/', views.add_department, name='add_department'),
     path('school/<int:school_id>/departments/<int:department_id>/edit/', views.edit_department, name='edit_department'),
-    path('school/<int:school_id>/departments/<int:department_id>/delete/', views.delete_department, name='delete_department'),
+    path('school/<int:school_id>/departments/<int:department_id>/delete/', views.delete_department,
+         name='delete_department'),
 
     # devices and its related pages
     path('schools_list/', views.school_list, name='school_list'),
@@ -48,10 +50,9 @@ urlpatterns = [
     # shifts and its related pages
     path('shifts/', views.shift_list, name='shifts'),
     path('shifts/<int:school_id>/', views.shift_list, name='shifts'),
-    path('shifts/add/<int:school_id>/', views.add_shift, name='add_shift'), 
+    path('shifts/add/<int:school_id>/', views.add_shift, name='add_shift'),
     path('delete/<int:id>/', views.delete_shift, name='delete_shift'),
     path('shifts/edit/<int:id>/', views.edit_shift, name='edit_shift'),
-
 
     # USER
     path('users/', views.user_list, name='user_list'),
@@ -63,15 +64,21 @@ urlpatterns = [
     # LOGOUT
     path('logout/', views.logout_view, name='logout'),
 
-    #STAFF
+    # STAFF
     path('schools/<int:school_id>/staff/add/', views.add_staff, name='add_staff'),
     path('school/<int:school_id>/staff/delete/<int:staff_id>/', views.delete_staff, name='delete_staff'),
     path('school/<int:school_id>/staff/edit/<int:staff_id>/', views.edit_staff, name='edit_staff'),
-
 
     # attendence
     path('users/<int:user_pk>/attendance/add/', views.add_attendance, name='add_attendance'),
     path('users/<int:user_pk>/attendance/<int:att_pk>/edit/', views.edit_attendance, name='edit_attendance'),
     path('users/<int:user_pk>/attendance/<int:att_pk>/delete/', views.delete_attendance, name='delete_attendance'),
+
+    # Schooladmin
+
+    path('school-admins/', views.school_admin_list, name='school_admin_list'),
+    path('school-admins/add/', views.add_school_admin, name='add_school_admin'),
+    path('school-admins/<int:pk>/edit/', views.edit_school_admin, name='edit_school_admin'),
+    path('school-admins/<int:pk>/delete/', views.delete_school_admin, name='delete_school_admin'),
 
 ]

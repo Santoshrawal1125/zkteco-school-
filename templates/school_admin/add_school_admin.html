@@ -10,11 +10,28 @@
         <h2 class="fw-bold">Add New School Admin</h2>
         <p class="text-muted">Fill out the details below to assign a school admin to a school.</p>
     </div>
-
+x
     <!-- Form Card -->
     <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
         <form method="post">
             {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_first_name" class="form-label fw-semibold">First Name</label>
+                <input type="text" class="form-control" id="id_first_name" name="first_name" placeholder="Enter first name" required value="{{ first_name|default:'' }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_last_name" class="form-label fw-semibold">Last Name</label>
+                <input type="text" class="form-control" id="id_last_name" name="last_name" placeholder="Enter last name" required value="{{ last_name|default:'' }}">
+            </div>
+
 
             <div class="mb-3">
                 <label for="id_username" class="form-label fw-semibold">Username</label>
@@ -41,11 +58,8 @@
                 </select>
             </div>
 
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+
+
 
             <div class="d-flex justify-content-between">
                 <a href="{% url 'school_admin_list' %}" class="btn btn-outline-secondary">Cancel</a>

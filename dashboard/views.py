@@ -318,6 +318,7 @@ def add_student(request, school_id, class_id):
         last_name = request.POST.get('last_name')
         username = request.POST.get('username')
         email = request.POST.get('email')
+        role = 'student'
 
         if not username or not email:
             return render(request, 'student/add_student.html', {
@@ -334,10 +335,11 @@ def add_student(request, school_id, class_id):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            password=password
+            password=password,
+            role=role
         )
 
-        Student.objects.create(user=user, school=school, student_class=student_class)
+        Student.objects.create(user=user, school=school, student_class=student_classpy)
 
         return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
 

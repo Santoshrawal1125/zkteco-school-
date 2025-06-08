@@ -73,9 +73,28 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
+        user = self.user
         # Add extra responses here
         data['user_id'] = self.user.id
         data['username'] = self.user.username
         data['user_role'] = self.user.role
+        # If user is a student, include school and student_class info
+
+        if user.role == 'student':
+            try:
+                student = Student.objects.select_related('school', 'student_class').get(user=user)
+                data['school_id'] = student.school.id
+                data['school_name'] = student.school.name
+                data['student_class_id'] = student.student_class.id if student.student_class else None
+                data['student_id'] = student.id
+            except Student.DoesNotExist:
+                data['school_id'] = None
+                data['school_name'] = None
+                data['student_class_id'] = None
+                data['student_id'] = None
 
         return data
+
+
+
+

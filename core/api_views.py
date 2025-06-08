@@ -233,8 +233,6 @@ def update_fcm_token(request):
 
 
 class ChangePasswordView(APIView):
-
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -261,3 +259,6 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response({"message": "Password changed successfully."}, status=200)
+
+
+

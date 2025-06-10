@@ -13,7 +13,7 @@ db.sqlite3
 media/
 staticfiles/        # If you're using `collectstatic`
 local_settings.py   # If you're using a separate local settings file
-
+fcm/firebase_credentials.json
 # Environment
 .env
 *.env

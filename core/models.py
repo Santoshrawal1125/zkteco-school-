@@ -11,6 +11,7 @@ class User(AbstractUser):
         ('student', 'Student'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    phone_number = models.CharField(max_length=10, blank=True, null=True, unique=True)
 
 
 # School created by admin (tracked by superuser, no explicit link to Admin model)

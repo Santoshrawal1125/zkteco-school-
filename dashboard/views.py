@@ -7,22 +7,28 @@ from django.http import HttpResponseBadRequest
 from django.utils.dateparse import parse_date, parse_time
 # Authentication views
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from core.models import (
     School, StudentClass, Department, Device, Shift,
-    SchoolAdmin, Staff, Student, Attendance,User
+    SchoolAdmin, Staff, Student, Attendance, User
 
 )
 from django.db import transaction
 from django.db import IntegrityError
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 
 import random
 import string
 
 User = get_user_model()
+
+
+def admin_required(view_func):
+    decorated_view_func = user_passes_test(lambda u: u.is_active and u.is_superuser)(view_func)
+    return decorated_view_func
 
 
 def get_user_school(user):
@@ -35,6 +41,7 @@ def get_user_school(user):
 
 
 # Dashboard
+@login_required()
 def dashboard(request):
     context = {}
 
@@ -59,11 +66,7 @@ def staff_attendance(request):
     return render(request, 'attendance/staff_attendance.html')
 
 
-
-
-
-
-
+@login_required()
 def add_staff(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -123,6 +126,7 @@ def add_staff(request, school_id):
 from django.views.decorators.http import require_POST
 
 
+@login_required()
 @require_POST
 def delete_staff(request, school_id, staff_id):
     staff = get_object_or_404(Staff, id=staff_id, school__id=school_id)
@@ -140,10 +144,7 @@ def delete_staff(request, school_id, staff_id):
     return redirect('school_staffs', school_id=school_id, department_id=department_id)
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-
-
+@login_required()
 def edit_staff(request, school_id, staff_id):
     staff = get_object_or_404(Staff, id=staff_id, school__id=school_id)
 
@@ -195,10 +196,12 @@ def edit_staff(request, school_id, staff_id):
 
 
 # School views
+@admin_required
 def school(request):
     schools = School.objects.all()
     return render(request, 'school/school.html', {'schools': schools})
 
+@admin_required
 
 def add_school(request):
     if request.method == "POST":
@@ -215,6 +218,7 @@ def add_school(request):
     return render(request, 'school/add_school.html')
 
 
+@login_required()
 def school_details(request, pk):
     school = get_object_or_404(School, pk=pk)
 
@@ -231,7 +235,7 @@ def school_details(request, pk):
 
     return render(request, 'school/school_details.html', {'school': school})
 
-
+@admin_required
 def school_delete(request, pk):
     school = get_object_or_404(School, pk=pk)
     if request.method == "POST":
@@ -240,7 +244,7 @@ def school_delete(request, pk):
         return redirect('school')
     return redirect('school_details', pk=pk)
 
-
+@login_required()
 def student_and_staff(request, school_id=None):
     user = request.user
 
@@ -276,6 +280,7 @@ def student_and_staff(request, school_id=None):
 
 
 # Staff views by school
+@login_required()
 def school_staffs(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id)
@@ -290,6 +295,7 @@ def school_staffs(request, school_id, department_id):
 
 
 # Classes by school
+@login_required()
 def school_student_classes(request, school_id):
     school = get_object_or_404(School, id=school_id)
     student_classes = StudentClass.objects.filter(school=school)
@@ -297,7 +303,7 @@ def school_student_classes(request, school_id):
 
 
 # Students by classes
-
+@login_required()
 def school_class_student(request, school_id, student_class_id):
     school = get_object_or_404(School, id=school_id)
     student_class = get_object_or_404(StudentClass, id=student_class_id)
@@ -308,7 +314,9 @@ def school_class_student(request, school_id, student_class_id):
         'students': students
     })
 
-#add student
+
+# add student
+@login_required()
 def add_student(request, school_id, class_id):
     school = get_object_or_404(School, id=school_id)
     student_class = get_object_or_404(StudentClass, id=class_id)
@@ -348,9 +356,10 @@ def add_student(request, school_id, class_id):
         'student_class': student_class
     })
 
-#delete student 
 
+# delete student
 
+@login_required()
 def delete_student(request, school_id, class_id, student_id):
     school = get_object_or_404(School, id=school_id)
     student_class = get_object_or_404(StudentClass, id=class_id)
@@ -359,7 +368,7 @@ def delete_student(request, school_id, class_id, student_id):
     if request.method == "POST":
         user = student.user
         student.delete()  # delete the student record
-        user.delete()     # delete the associated user account
+        user.delete()  # delete the associated user account
 
         messages.success(request, "Student deleted successfully.")
         return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
@@ -369,7 +378,7 @@ def delete_student(request, school_id, class_id, student_id):
 
 
 # Edit student
-
+@login_required()
 def edit_student(request, school_id, student_class_id, student_id):
     student = get_object_or_404(Student, id=student_id, school_id=school_id, student_class_id=student_class_id)
     user = student.user
@@ -396,11 +405,10 @@ def edit_student(request, school_id, student_class_id, student_id):
     })
 
 
-
-
 # CRUD FOR CLASS
 
 # Add a new class
+@login_required()
 def add_class(request, school_id):
     school = get_object_or_404(School, id=school_id)
     shifts = Shift.objects.filter(school=school)  # Get only shifts of this school
@@ -430,6 +438,7 @@ def add_class(request, school_id):
 
 # Edit an existing class
 # ✅ Edit Class View
+@login_required()
 def edit_class(request, school_id, class_id):
     school = get_object_or_404(School, id=school_id)
     student_class = get_object_or_404(StudentClass, id=class_id, school=school)
@@ -462,6 +471,7 @@ def edit_class(request, school_id, class_id):
 
 # Delete a class
 # ✅ Delete Class View
+@login_required()
 def delete_class(request, school_id, class_id):
     school = get_object_or_404(School, id=school_id)
     student_class = get_object_or_404(StudentClass, id=class_id, school=school)
@@ -472,6 +482,7 @@ def delete_class(request, school_id, class_id):
 
 
 # Add a new department to a school
+@login_required()
 def add_department(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -485,18 +496,20 @@ def add_department(request, school_id):
 
 
 # Department views
+@login_required()
 def departments(request):
     departments = Department.objects.select_related('school').all()
     schools = School.objects.all()
     return render(request, 'departments/departments.html', {'departments': departments, 'schools': schools})
 
 
+@login_required()
 def school_departments(request, school_id):
     school = get_object_or_404(School, id=school_id)
     departments = Department.objects.filter(school=school)
     return render(request, 'departments/school_departments.html', {'school': school, 'departments': departments})
 
-
+@login_required()
 def edit_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id, school=school)
@@ -520,7 +533,7 @@ def edit_department(request, school_id, department_id):
         'school': school
     })
 
-
+@login_required()
 def delete_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
     department = get_object_or_404(Department, id=department_id, school=school)
@@ -533,18 +546,19 @@ def delete_department(request, school_id, department_id):
 
 
 # Device views
+@login_required()
 def school_list(request):
     schools = School.objects.all()
     return render(request, 'device/school_list.html', {'schools': schools})
 
-
+@login_required()
 def devices_by_school(request, school_id):
     school = get_object_or_404(School, pk=school_id)
     devices = Device.objects.filter(school=school)
     return render(request, 'device/devices_by_school.html', {'school': school, 'devices': devices})
 
 
-@login_required
+@login_required()
 def add_device(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -597,7 +611,7 @@ def delete_device(request, device_id):
 
 # Shift views
 
-
+@login_required()
 def shift_list(request, school_id=None):
     user = request.user
 
@@ -626,6 +640,7 @@ def shift_list(request, school_id=None):
 
 
 # add shift
+@login_required()
 def add_shift(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -650,6 +665,7 @@ def add_shift(request, school_id):
 
 
 # delete shift
+@login_required()
 def delete_shift(request, id):
     shift = get_object_or_404(Shift, id=id)
 
@@ -665,7 +681,7 @@ def delete_shift(request, id):
 
 # shift edit
 
-
+@login_required()
 def edit_shift(request, id):
     shift = get_object_or_404(Shift, id=id)
     school = shift.school  # Keep school for redirect and template
@@ -689,11 +705,12 @@ def edit_shift(request, id):
 
 
 # User management views
+@admin_required
 def user_list(request):
     users = User.objects.all()
     return render(request, 'user/user_list.html', {'users': users})
 
-
+@admin_required
 def add_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -729,7 +746,7 @@ def add_user(request):
     }
     return render(request, 'user/add_user.html', context)
 
-
+@admin_required
 def edit_user(request, pk):
     user = get_object_or_404(User, pk=pk)
 
@@ -747,7 +764,7 @@ def edit_user(request, pk):
     }
     return render(request, 'user/edit_user.html', context)
 
-
+@login_required()
 def user_detail(request, pk):
     user_obj = get_object_or_404(User, pk=pk)
     attendance_records = []
@@ -764,7 +781,7 @@ def user_detail(request, pk):
 
     return render(request, 'user/user_detail.html', {'user_obj': user_obj, 'attendance_records': attendance_records})
 
-
+@login_required()
 @require_POST
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
@@ -817,6 +834,7 @@ def logout_view(request):
 
 
 # Attendance management views
+@login_required()
 def add_attendance(request, user_pk):
     user_obj = get_object_or_404(User, pk=user_pk)
 
@@ -869,7 +887,7 @@ def add_attendance(request, user_pk):
 
     return render(request, 'attendance/add_attendance.html', {'user_obj': user_obj})
 
-
+@login_required()
 def edit_attendance(request, user_pk, att_pk):
     user_obj = get_object_or_404(User, pk=user_pk)
     attendance = get_object_or_404(Attendance, pk=att_pk)
@@ -896,7 +914,7 @@ def edit_attendance(request, user_pk, att_pk):
 
     return render(request, 'attendance/edit_attendance.html', {'user_obj': user_obj, 'attendance': attendance})
 
-
+@login_required()
 def delete_attendance(request, user_pk, att_pk):
     attendance = get_object_or_404(Attendance, pk=att_pk)
     attendance.delete()
@@ -905,6 +923,7 @@ def delete_attendance(request, user_pk, att_pk):
 
 
 # 1. List all SchoolAdmins
+@admin_required
 def school_admin_list(request):
     schools = School.objects.select_related('schooladmin__user').all()
     return render(request, 'school_admin/school_admin_list.html', {'schools': schools})
@@ -912,7 +931,7 @@ def school_admin_list(request):
 
 # 2. Add SchoolAdmin
 
-
+@login_required()
 def add_school_admin(request):
     schools = School.objects.all()
 
@@ -957,6 +976,7 @@ def add_school_admin(request):
 
 
 # 3. Edit SchoolAdmin
+@login_required()
 def edit_school_admin(request, pk):
     school_admin = get_object_or_404(SchoolAdmin, pk=pk)
     schools = School.objects.all()
@@ -1010,7 +1030,9 @@ def edit_school_admin(request, pk):
         'school_id': school_admin.school.id if school_admin.school else '',
     })
 
+
 # 4. Delete SchoolAdmin
+@login_required()
 def delete_school_admin(request, pk):
     school_admin = get_object_or_404(SchoolAdmin, pk=pk)
     user = school_admin.user

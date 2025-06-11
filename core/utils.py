@@ -47,18 +47,27 @@ def process_attendance_data(post_data, device_sn):
             raw_dt = datetime.datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
             arrival_time = make_aware(raw_dt.replace(microsecond=0))
 
+            # Get the date part only
+            attendance_date = arrival_time.date()
+
             existing = Attendance.objects.filter(
                 staff=user_obj if user_type == 'staff' else None,
                 student=user_obj if user_type == 'student' else None,
-                arrival_time=arrival_time
+                arrival_time__date=attendance_date
             ).first()
 
             if existing:
-                logger.info(f"⏩ Duplicate entry for {user_type} ID {user_obj.id} at {arrival_time}")
-                if status == '1':
-                    existing.departure_time = arrival_time
-                    existing.save()
-                    logger.info(f"✅ Updated departure time for {user_type} ID {user_obj.id}")
+                if not existing.departure_time:
+                    # Only update departure if 1 hour has passed
+                    time_difference = (arrival_time - existing.arrival_time).total_seconds()
+                    if time_difference >= 3600:  # 3600 seconds = 1 hour
+                        existing.departure_time = arrival_time
+                        existing.save()
+                        logger.info(f"✅ Set departure time for {user_type} ID {user_obj.id} to {arrival_time}")
+                    else:
+                        logger.info(
+                            f"🕐 Skipped departure time for {user_type} ID {user_obj.id}: less than 1 hour after arrival.")
+
             else:
                 att = Attendance.objects.create(
                     attendee_type=user_type,
@@ -70,7 +79,7 @@ def process_attendance_data(post_data, device_sn):
                     school=user_obj.school,
                     student_class=user_obj.student_class if user_type == 'student' else None
                 )
-                logger.info(f"✅ Attendance created for {user_type} ID {user_obj.id} at {arrival_time}")
+                logger.info(f"✅ Created arrival time for {user_type} ID {user_obj.id} at {arrival_time}")
 
                 # Log FCM token for this user, even if it's None or empty
                 fcm_token = getattr(user_obj, 'fcm_token', None)

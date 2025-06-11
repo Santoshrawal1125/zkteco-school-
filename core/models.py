@@ -97,10 +97,6 @@ class Device(models.Model):
     def __str__(self):
         return f"{self.serial_number} - {self.school.name}"
 
-
-# Unified Attendance model for staff and student
-from django.utils.timezone import localtime
-import datetime
 from django.utils.timezone import make_aware, is_naive, localtime
 
 

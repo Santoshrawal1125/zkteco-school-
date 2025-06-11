@@ -35,6 +35,7 @@
                         <tr>
                             <th>#</th>
                             <th>Username</th>
+                            <th>User ID</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th class="text-end">Actions</th>
@@ -48,6 +49,8 @@
                                 <img src="https://img.icons8.com/ios-filled/40/user-male-circle.png" alt="User Icon" class="rounded-circle">
                                 <a href="{% url 'user_detail' user.pk %}" class="fw-semibold text-decoration-none">{{ user.username }}</a>
                             </td>
+                                                                <td>{{ user.id }}</td> <!-- New cell for user ID -->
+
                             <td>
                                 <i class="bi bi-envelope text-primary me-1"></i>{{ user.email }}
                             </td>

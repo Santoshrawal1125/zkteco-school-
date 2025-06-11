@@ -37,6 +37,7 @@
                     <th>Photo</th>
                     <th>Name</th>
                     <th>Username</th>
+                    <th>User ID</th>
                     <th>Email</th>
                     <th>Position</th>
                     <th>Department</th>
@@ -62,6 +63,7 @@
                         </a>
                     </td>
                     <td>{{ staff.user.username }}</td>
+                    <td>{{ staff.user.id }}</td>
                     <td>{{ staff.user.email }}</td>
                     <td>{{ staff.position }}</td>
                     <td>{{ staff.department.name|default:"—" }}</td>

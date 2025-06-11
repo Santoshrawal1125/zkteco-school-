@@ -36,6 +36,7 @@
                     <th>#</th>
                     <th>Photo</th>
                     <th>Full Name</th>
+                    <th>User ID</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>FCM Token</th>
@@ -58,6 +59,7 @@
                             {{ student.user.get_full_name }}
                         </a>
                     </td>
+                    <td>{{student.user.id}}</td>
                     <td>{{ student.user.username }}</td>
                     <td>{{ student.user.email }}</td>
                     <td class="text-truncate" style="max-width: 200px;">{{ student.fcm_token|default:"—" }}</td>

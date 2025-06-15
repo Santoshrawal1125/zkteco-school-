@@ -65,7 +65,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     # STAFF
-    path('schools/<int:school_id>/staff/add/', views.add_staff, name='add_staff'),
+    path('school/<int:school_id>/department/<int:department_id>/add-staff/', views.add_staff, name='add_staff'),
     path('school/<int:school_id>/staff/delete/<int:staff_id>/', views.delete_staff, name='delete_staff'),
     path('school/<int:school_id>/staff/edit/<int:staff_id>/', views.edit_staff, name='edit_staff'),
 

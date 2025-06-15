@@ -13,7 +13,7 @@
             <h2 class="fw-bold mb-1">{{ school.name }}</h2>
             <p class="text-muted mb-0">List of staff members under {{ school.name }}</p>
         </div>
-        <a href="{% url 'add_staff' school.id %}" class="btn btn-success">
+        <a href="{% url 'add_staff' school.id department.id %}" class="btn btn-success">
             <i class="bi bi-plus-lg"></i> Add Staff
         </a>
     </div>

@@ -67,21 +67,18 @@ def staff_attendance(request):
 
 
 @login_required()
-def add_staff(request, school_id):
+def add_staff(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
-
-    # Get department_id from GET request if available
-    department_id = request.GET.get('department_id')
+    department = get_object_or_404(Department, id=department_id, school=school)
 
     if request.method == 'POST':
         username = request.POST.get('username')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
+        phone_number = request.POST.get('phone-number')
         position = request.POST.get('position')
-        department_id = request.POST.get('department')  # override from POST
         shift_id = request.POST.get('shift')
-
         password = f"{username}@123"
 
         if User.objects.filter(username=username).exists():
@@ -95,19 +92,20 @@ def add_staff(request, school_id):
                 password=password,
                 role='staff',
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                phone_number=phone_number,
             )
 
             Staff.objects.create(
                 user=user,
                 school=school,
                 position=position,
-                department_id=department_id,
-                shift_id=shift_id
+                department=department,
+                shift_id=shift_id if shift_id else None,
             )
 
             messages.success(request, f"Staff added successfully. Default password: {password}")
-            return redirect('school_staffs', school_id=school.id, department_id=department_id)
+            return redirect('school_staffs', school_id=school.id, department_id=department.id)
 
         except IntegrityError:
             messages.error(request, "An error occurred while adding the staff. Please try again.")
@@ -115,12 +113,11 @@ def add_staff(request, school_id):
 
     context = {
         'school': school,
-        'school_id': school.id,
-        'department_id': department_id,
-        'departments': Department.objects.filter(school=school),
+        'department': department,
         'shifts': Shift.objects.filter(school=school),
     }
     return render(request, 'staff/add_staff.html', context)
+
 
 
 from django.views.decorators.http import require_POST
@@ -293,7 +290,7 @@ def school_staffs(request, school_id, department_id):
     staffs = Staff.objects.filter(school=school, department=department)
 
     return render(request, 'school/staff_acc_to_school.html',
-                  {'school': school, department: 'department', 'staffs': staffs})
+                  {'school': school, 'department': department, 'staffs': staffs})
 
 
 # Classes by school

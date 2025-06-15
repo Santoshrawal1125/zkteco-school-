@@ -23,7 +23,7 @@
     </div>
 
     <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
-        <form method="post" novalidate>
+        <form method="post" >
             {% csrf_token %}
 
             <div class="mb-3">
@@ -41,10 +41,10 @@
                 <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter last name" required>
             </div>
 
-            <div class="mb-3">
-                <label for="email" class="form-label fw-semibold">Email</label>
-                <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" required>
-            </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" required>
+                </div>
 
             <div class="mb-3">
                 <label for="position" class="form-label fw-semibold">Position</label>

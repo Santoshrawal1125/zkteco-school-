@@ -42,7 +42,6 @@
                     <th>Position</th>
                     <th>Department</th>
                     <th>Shift</th>
-                    <th>FCM Token</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -68,7 +67,6 @@
                     <td>{{ staff.position }}</td>
                     <td>{{ staff.department.name|default:"—" }}</td>
                     <td>{{ staff.shift.name|default:"—" }}</td>
-                    <td class="text-truncate" style="max-width: 200px;">{{ staff.fcm_token|default:"—" }}</td>
                     <td class="text-end">
                         <div class="btn-group gap-1">
                             <a href="{% url 'edit_staff' school_id=staff.school.id staff_id=staff.id %}" class="btn btn-sm btn-outline-primary">Edit</a>

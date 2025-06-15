@@ -79,18 +79,7 @@
                             Shift
                         </a>
                         {% endif %}
-<!--                        <a class="nav-link" href="#">-->
-<!--                            <div class="sb-nav-link-icon"><i class="fas fa-users-cog"></i></div>-->
-<!--                            All Staffs-->
-<!--                        </a>-->
-<!--                        <a class="nav-link" href="#">-->
-<!--                            <div class="sb-nav-link-icon"><i class="fas fa-chalkboard-teacher"></i></div>-->
-<!--                            Student Class-->
-<!--                        </a>-->
-<!--                        <a class="nav-link" href="#">-->
-<!--                            <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>-->
-<!--                            All Students-->
-<!--                        </a>-->
+
                         {% if user.is_superuser %}
                         <a class="nav-link" href="{% url 'user_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -110,11 +99,20 @@
 
         <!-- Main Content Area -->
         <div id="layoutSidenav_content">
-            <main class="py-4 px-4">
-                {% block content %}
-                <!-- Page specific content goes here -->
-                {% endblock %}
-            </main>
+        <main class="py-4 px-4">
+            {% block back_button %}
+            <div class="mb-3">
+                <a href="javascript:history.back()" class="btn btn-back shadow-sm d-inline-flex align-items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+            {% endblock %}
+
+            {% block content %}
+            <!-- Page specific content goes here -->
+            {% endblock %}
+        </main>
+
 
             <!-- Footer -->
             <footer class="py-4 bg-light mt-auto">

@@ -11,7 +11,11 @@ class User(AbstractUser):
         ('student', 'Student'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    phone_number = models.CharField(max_length=10, blank=True, null=True, unique=True)
+    phone_number = models.CharField(max_length=10, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # This triggers field validation
+        super().save(*args, **kwargs)
 
 
 # School created by admin (tracked by superuser, no explicit link to Admin model)

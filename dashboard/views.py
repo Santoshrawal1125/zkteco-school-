@@ -201,8 +201,8 @@ def school(request):
     schools = School.objects.all()
     return render(request, 'school/school.html', {'schools': schools})
 
-@admin_required
 
+@admin_required
 def add_school(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -235,6 +235,7 @@ def school_details(request, pk):
 
     return render(request, 'school/school_details.html', {'school': school})
 
+
 @admin_required
 def school_delete(request, pk):
     school = get_object_or_404(School, pk=pk)
@@ -243,6 +244,7 @@ def school_delete(request, pk):
         messages.success(request, "School has been deleted successfully.")
         return redirect('school')
     return redirect('school_details', pk=pk)
+
 
 @login_required()
 def student_and_staff(request, school_id=None):
@@ -347,7 +349,7 @@ def add_student(request, school_id, class_id):
             role=role
         )
 
-        Student.objects.create(user=user, school=school, student_class=student_classpy)
+        Student.objects.create(user=user, school=school, student_class=student_class)
 
         return redirect('school_class_student', school_id=school.id, student_class_id=student_class.id)
 
@@ -509,6 +511,7 @@ def school_departments(request, school_id):
     departments = Department.objects.filter(school=school)
     return render(request, 'departments/school_departments.html', {'school': school, 'departments': departments})
 
+
 @login_required()
 def edit_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
@@ -533,6 +536,7 @@ def edit_department(request, school_id, department_id):
         'school': school
     })
 
+
 @login_required()
 def delete_department(request, school_id, department_id):
     school = get_object_or_404(School, id=school_id)
@@ -550,6 +554,7 @@ def delete_department(request, school_id, department_id):
 def school_list(request):
     schools = School.objects.all()
     return render(request, 'device/school_list.html', {'schools': schools})
+
 
 @login_required()
 def devices_by_school(request, school_id):
@@ -710,17 +715,20 @@ def user_list(request):
     users = User.objects.all()
     return render(request, 'user/user_list.html', {'users': users})
 
+
 @admin_required
 def add_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
+        phone_number = request.POST.get('phone-number')
         role = request.POST.get('role')
         school_id = request.POST.get('school')
         school = School.objects.filter(id=school_id).first()
 
         password = f"{username}@123" if role == 'student' else request.POST.get('password')
-        user = User.objects.create_user(username=username, email=email, password=password, role=role)
+        user = User.objects.create_user(username=username, email=email, phone_number=phone_number, password=password,
+                                        role=role)
 
         if role == 'school_admin':
             SchoolAdmin.objects.create(user=user, school=school)
@@ -746,6 +754,7 @@ def add_user(request):
     }
     return render(request, 'user/add_user.html', context)
 
+
 @admin_required
 def edit_user(request, pk):
     user = get_object_or_404(User, pk=pk)
@@ -754,6 +763,11 @@ def edit_user(request, pk):
         user.username = request.POST.get('username')
         user.email = request.POST.get('email')
         user.role = request.POST.get('role')
+
+        phone_number = request.POST.get('phone-number')
+        if phone_number:
+            user.phone_number = phone_number  # adds or updates
+
         user.save()
         messages.success(request, 'User updated successfully.')
         return redirect('user_list')
@@ -763,6 +777,7 @@ def edit_user(request, pk):
         'schools': School.objects.all(),
     }
     return render(request, 'user/edit_user.html', context)
+
 
 @login_required()
 def user_detail(request, pk):
@@ -780,6 +795,7 @@ def user_detail(request, pk):
             attendance_records = Attendance.objects.filter(student=student).order_by('-timestamp')
 
     return render(request, 'user/user_detail.html', {'user_obj': user_obj, 'attendance_records': attendance_records})
+
 
 @login_required()
 @require_POST
@@ -887,6 +903,7 @@ def add_attendance(request, user_pk):
 
     return render(request, 'attendance/add_attendance.html', {'user_obj': user_obj})
 
+
 @login_required()
 def edit_attendance(request, user_pk, att_pk):
     user_obj = get_object_or_404(User, pk=user_pk)
@@ -913,6 +930,7 @@ def edit_attendance(request, user_pk, att_pk):
         return redirect('user_detail', pk=user_pk)
 
     return render(request, 'attendance/edit_attendance.html', {'user_obj': user_obj, 'attendance': attendance})
+
 
 @login_required()
 def delete_attendance(request, user_pk, att_pk):

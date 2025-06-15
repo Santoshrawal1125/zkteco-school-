@@ -28,6 +28,14 @@
                     <input type="email" name="email" class="form-control" value="{{ user_obj.email }}">
                 </div>
 
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Phone Number</label>
+                    <input type="tel" name="phone-number" class="form-control" value="{{ user_obj.phone_number }}">
+                </div>
+
+
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Role</label>
                     <input type="text" name="role" class="form-control bg-light text-muted" value="{{ user_obj.role }}" readonly>

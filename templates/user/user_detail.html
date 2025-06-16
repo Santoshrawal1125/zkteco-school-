@@ -78,7 +78,7 @@
                             <th>Arrival</th>
                             <th>Departure</th>
                             <th>Status</th>
-                            <th>Device</th>
+                            <th>Review</th>
                             <th>Actions</th> <!-- New column -->
                         </tr>
                     </thead>
@@ -103,7 +103,7 @@
                                     <span class="badge bg-danger">Absent</span>
                                 {% endif %}
                             </td>
-                            <td>{{ record.device.serial_number }}</td>
+                            <td>{{ record.review }}</td>
 <td>
     <a href="{% url 'edit_attendance' user_obj.pk record.pk %}" class="btn btn-outline-primary btn-sm me-1">
         Edit

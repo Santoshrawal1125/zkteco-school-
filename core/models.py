@@ -101,6 +101,7 @@ class Device(models.Model):
     def __str__(self):
         return f"{self.serial_number} - {self.school.name}"
 
+
 from django.utils.timezone import make_aware, is_naive, localtime
 
 
@@ -119,7 +120,7 @@ class Attendance(models.Model):
     attendee_type = models.CharField(max_length=10, choices=ATTENDEE_TYPE)
     staff = models.ForeignKey(Staff, null=True, blank=True, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, null=True, blank=True, on_delete=models.CASCADE)
-
+    review = models.CharField(max_length=500, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     arrival_time = models.DateTimeField(null=True, blank=True)
     departure_time = models.DateTimeField(null=True, blank=True)

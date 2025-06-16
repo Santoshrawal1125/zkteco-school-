@@ -859,10 +859,16 @@ def add_attendance(request, user_pk):
 
         try:
             arrival_time = datetime.strptime(f"{date_str} {arrival_str}", "%Y-%m-%d %H:%M")
-            departure_time = datetime.strptime(f"{date_str} {departure_str}", "%Y-%m-%d %H:%M")
         except ValueError:
             return HttpResponseBadRequest("Invalid date/time format.")
 
+        departure_time = None
+
+        if departure_str:
+            try:
+                departure_time = datetime.strptime(f"{date_str} {departure_str}", "%Y-%m-%d %H:%M")
+            except ValueError:
+                return HttpResponseBadRequest("Invalid date?time format")
         if user_obj.role == 'student':
             try:
                 student = user_obj.student
@@ -911,6 +917,14 @@ def edit_attendance(request, user_pk, att_pk):
         arrival_time_str = request.POST.get('arrival_time')
         departure_time_str = request.POST.get('departure_time')
         status = request.POST.get('status')
+        review = request.POST.get('review')
+
+        if not review or review.strip() == "":
+            messages.error(request, "Review is required.")
+            return render(request, 'attendance/edit_attendance.html', {
+                'user_obj': user_obj,
+                'attendance': attendance
+            })
 
         date_obj = parse_date(date_str)
         arrival_time_obj = parse_time(arrival_time_str)
@@ -922,6 +936,7 @@ def edit_attendance(request, user_pk, att_pk):
             attendance.departure_time = datetime.combine(date_obj, departure_time_obj)
 
         attendance.status = status
+        attendance.review = review
         attendance.save()
         messages.success(request, "Attendance record updated.")
         return redirect('user_detail', pk=user_pk)

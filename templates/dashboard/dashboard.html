@@ -3,8 +3,98 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Welcome to your Dashboard{% if school %}, {{ school.name }}{% endif %}!</h1>
-    <!-- Add dashboard content here -->
+<div class="container mt-5">
+    {% if user.is_superuser or user.role == 'admin' %}
+        <h2 class="mb-4">Welcome{% if school %}, {{ school.name }}{% endif %}!</h2>
+
+        <div class="row g-4">
+            <!-- Total Schools -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Schools</h5>
+                        <h2 class="card-text">{{ total_schools }}</h2>
+                        <i class="bi bi-building" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Users -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Users</h5>
+                        <h2 class="card-text">{{ total_users }}</h2>
+                        <i class="bi bi-people" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Staff -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 bg-warning text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Staff</h5>
+                        <h2 class="card-text">{{ total_staff }}</h2>
+                        <i class="bi bi-person-badge" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Schools -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Recently Registered Schools</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_schools %}
+                            <ul class="list-group list-group-flush">
+                                {% for school in recent_schools %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ school.name }}
+                                        <small class="text-muted">
+                                            {{ school.created_at|date:"M d, Y" }}
+                                        </small>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No schools registered recently.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% elif user.role == 'school_admin' and school %}
+        <h2 class="mb-4">Welcome to {{ school.name }} Dashboard!</h2>
+
+        <div class="row g-4">
+            <!-- Total Staff -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4 bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Staff</h5>
+                        <h2 class="card-text">{{ school_staff_count }}</h2>
+                        <i class="bi bi-person-badge" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Students -->
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-4 bg-secondary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Students</h5>
+                        <h2 class="card-text">{{ school_student_count }}</h2>
+                        <i class="bi bi-person" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -45,12 +45,23 @@ def get_user_school(user):
 def dashboard(request):
     context = {}
 
-    # Only add `school` for school admins
-    if request.user.is_authenticated and request.user.role == 'school_admin':
-        school = get_user_school(request.user)
-        if school:
-            context['school'] = school
-    return render(request, 'dashboard/dashboard.html')
+    if request.user.is_authenticated:
+        # For Super Admin
+        if request.user.is_superuser or request.user.role == 'admin':
+            context['total_schools'] = School.objects.count()
+            context['total_users'] = User.objects.count()
+            context['total_staff'] = Staff.objects.count()
+            context['recent_schools'] = School.objects.order_by('-id')[:5]
+
+        # For School Admin
+        elif request.user.role == 'school_admin':
+            school = get_user_school(request.user)
+            if school:
+                context['school'] = school
+                context['school_staff_count'] = Staff.objects.filter(school=school).count()
+                context['school_student_count'] = Student.objects.filter(school=school).count()
+
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 # Attendance views
@@ -117,7 +128,6 @@ def add_staff(request, school_id, department_id):
         'shifts': Shift.objects.filter(school=school),
     }
     return render(request, 'staff/add_staff.html', context)
-
 
 
 from django.views.decorators.http import require_POST
@@ -1070,3 +1080,20 @@ def delete_school_admin(request, pk):
     user.delete()  # also remove the user account
     messages.success(request, "School Admin deleted successfully.")
     return redirect('school_admin_list')
+
+
+def admin_dashboard(request):
+    print("DASHBOARD VIEW CALLED!")  # debug line
+    total_schools = School.objects.count()
+    total_users = User.objects.count()
+    total_staff = Staff.objects.count()
+    recent_schools = School.objects.order_by('-created_at')[:5]
+
+    context = {
+        'total_schools': total_schools,
+        'total_users': total_users,
+        'total_staff': total_staff,
+        'recent_schools': recent_schools,
+    }
+
+    return render(request, 'dashboard/dashboard.html', context)

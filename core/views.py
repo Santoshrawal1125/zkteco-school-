@@ -25,7 +25,6 @@ def iclock_cdata(request):
         table = request.GET.get('table')
         raw_data = request.body.decode('utf-8', errors='ignore')
 
-
         logger.info(f"ZKTeco POST: SN={serial}, Table={table}")
         logger.info(f"Raw:\n{raw_data}")
 

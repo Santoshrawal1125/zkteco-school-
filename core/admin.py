@@ -5,6 +5,8 @@ from .models import (
     User, School, SchoolAdmin, Department,
     StudentClass, Staff, Student, Device, Attendance, Shift
 )
+from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
+import json
 
 
 # Custom user creation form

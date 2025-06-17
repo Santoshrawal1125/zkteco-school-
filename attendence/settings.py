@@ -184,7 +184,7 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'mark-absentees-every-day': {
         'task': 'core.tasks.mark_absentees',
-        'schedule': crontab(minute=15, hour=13),  # No timezone here
+        'schedule': crontab(minute=35, hour=22),  # No timezone here
     },
 }
 

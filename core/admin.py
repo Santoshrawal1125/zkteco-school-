@@ -63,3 +63,14 @@ admin.site.register(Student)
 admin.site.register(Device)
 admin.site.register(Attendance)
 admin.site.register(Shift)
+
+# admin.py
+
+from django.contrib import admin
+from .models import Holiday
+
+
+@admin.register(Holiday)
+class HolidayAdmin(admin.ModelAdmin):
+    list_display = ('school', 'name', 'start_date', 'end_date')
+    list_filter = ('school', 'start_date', 'end_date')

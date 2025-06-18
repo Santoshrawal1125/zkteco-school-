@@ -11,7 +11,7 @@ class User(AbstractUser):
         ('student', 'Student'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
-    phone_number = models.CharField(max_length=10, unique=True, blank=True,null=True)
+    phone_number = models.CharField(max_length=10, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         self.full_clean()  # This triggers field validation
@@ -158,3 +158,24 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.attendee_type} - {self.status} - {self.timestamp}"
+
+
+# models.py
+
+class Holiday(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+    # Use start_date and end_date to support single or multi-day holidays
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        if self.start_date == self.end_date:
+            return f"{self.school.name} - {self.start_date} ({self.name})"
+        return f"{self.school.name} - {self.start_date} to {self.end_date} ({self.name})"
+
+    class Meta:
+        verbose_name = "Holiday"
+        verbose_name_plural = "Holidays"
+

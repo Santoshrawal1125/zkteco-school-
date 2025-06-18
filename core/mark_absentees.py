@@ -1,34 +1,50 @@
-#!/usr/bin/env python
-#AS OUR HOSTED PLATFORM DIDINT SUPPORT SUDO FOR SUPERVISIOR OF REDIS AND CELERY WE NEED TO USE THIS FRO CRON JOB.
 import os
 import sys
 import django
 from django.utils import timezone
 
-# Set up Django environment to access models
-sys.path.append('/home/alsamain/attendance.alsamainternational.com')  # your project root path
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'attendence.settings')  # Change 'attendence' to your project name
+# 👇 Add this to include the project root directory in sys.path
+sys.path.append('D:/attendance.alsamainternational.com')
+
+# Set the settings module
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "attendence.settings")
 django.setup()
 
-from core.models import Student, Staff, Attendance
+from core.models import Student, Staff, Attendance, Holiday
 
 
 def mark_absentees():
-    now = timezone.now()
-    print(f"Running mark_absentees at {now} (timezone: {now.tzinfo})")
     today = timezone.localdate()
+    now = timezone.now()
 
-    students = Student.objects.all()
-    staff_members = Staff.objects.all()
+    students = Student.objects.select_related('school').all()
+    staff_members = Staff.objects.select_related('school').all()
 
     for student in students:
+        school = student.school
+        is_holiday = Holiday.objects.filter(
+            school=school,
+            start_date__lte=today,
+            end_date__gte=today
+        ).exists()
+        if is_holiday:
+            continue
+
         if not Attendance.objects.filter(student=student, timestamp__date=today).exists():
             Attendance.objects.create(student=student, status='Absent', timestamp=now)
 
     for staff in staff_members:
+        school = staff.school
+        is_holiday = Holiday.objects.filter(
+            school=school,
+            start_date__lte=today,
+            end_date__gte=today
+        ).exists()
+        if is_holiday:
+            continue
+
         if not Attendance.objects.filter(staff=staff, timestamp__date=today).exists():
             Attendance.objects.create(staff=staff, status='Absent', timestamp=now)
 
 
-if __name__ == '__main__':
-    mark_absentees()
+mark_absentees()

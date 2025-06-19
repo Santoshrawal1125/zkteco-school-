@@ -18,11 +18,12 @@ urlpatterns = [
     # staffs according to their school
     path('school/<int:school_id>/department/<int:department_id>/staffs/', views.school_staffs, name='school_staffs'),
 
-    #student add
+    # student add
     path('school/<int:school_id>/class/<int:class_id>/students/add/', views.add_student, name='add_student'),
-    path('dashboard/school/<int:school_id>/class/<int:class_id>/student/<int:student_id>/delete/', views.delete_student, name='delete_student'),
-    path('dashboard/school/<int:school_id>/class/<int:student_class_id>/students/<int:student_id>/edit/', views.edit_student, name='edit_student'),
-
+    path('dashboard/school/<int:school_id>/class/<int:class_id>/student/<int:student_id>/delete/', views.delete_student,
+         name='delete_student'),
+    path('dashboard/school/<int:school_id>/class/<int:student_class_id>/students/<int:student_id>/edit/',
+         views.edit_student, name='edit_student'),
 
     # list of student classes under a specific school
     path('school/<int:school_id>/classes/', views.school_student_classes, name='school_student_classes'),
@@ -53,6 +54,13 @@ urlpatterns = [
     path('shifts/add/<int:school_id>/', views.add_shift, name='add_shift'),
     path('delete/<int:id>/', views.delete_shift, name='delete_shift'),
     path('shifts/edit/<int:id>/', views.edit_shift, name='edit_shift'),
+
+    # holidays and related pages
+    path('holidays/', views.holiday_list, name='holidays'),
+    path('holidays/<int:school_id>/', views.holiday_list, name='holidays'),
+    path('holidays/add/<int:school_id>/', views.add_holiday, name='add_holiday'),
+    path('holidays/delete/<int:id>/', views.delete_holiday, name='delete_holiday'),
+    path('holidays/edit/<int:id>/', views.edit_holiday, name='edit_holiday'),
 
     # USER
     path('users/', views.user_list, name='user_list'),

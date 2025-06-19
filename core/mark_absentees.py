@@ -17,8 +17,8 @@ def mark_absentees():
     today = timezone.localdate()
     now = timezone.now()
 
-    students = Student.objects.select_related('school').all()
-    staff_members = Staff.objects.select_related('school').all()
+    students = Student.objects.select_related('school', 'student_class').all()
+    staff_members = Staff.objects.select_related('school', 'department').all()
 
     for student in students:
         school = student.school
@@ -31,7 +31,14 @@ def mark_absentees():
             continue
 
         if not Attendance.objects.filter(student=student, timestamp__date=today).exists():
-            Attendance.objects.create(student=student, status='Absent', timestamp=now)
+            Attendance.objects.create(
+                attendee_type='student',
+                student=student,
+                school=student.school,
+                student_class=student.student_class,
+                status='absent',
+                timestamp=now
+            )
 
     for staff in staff_members:
         school = staff.school
@@ -44,7 +51,15 @@ def mark_absentees():
             continue
 
         if not Attendance.objects.filter(staff=staff, timestamp__date=today).exists():
-            Attendance.objects.create(staff=staff, status='Absent', timestamp=now)
+            Attendance.objects.create(
+                attendee_type='staff',
+                staff=staff,
+                school=staff.school,
+                department=staff.department,
+                status='absent',
+                timestamp=now
+            )
 
 
-mark_absentees()
+if __name__ == '__main__':
+    mark_absentees()

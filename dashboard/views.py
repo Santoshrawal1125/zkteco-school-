@@ -11,7 +11,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from core.models import (
     School, StudentClass, Department, Device, Shift,
-    SchoolAdmin, Staff, Student, Attendance, User
+    SchoolAdmin, Staff, Student, Attendance, User, Holiday
 
 )
 from django.db import transaction
@@ -714,6 +714,104 @@ def edit_shift(request, id):
         return redirect('shifts', school_id=school.id)
 
     return render(request, 'shift/edit_shift.html', {'shift': shift, 'school': school})
+
+
+# Holiday logic
+
+@login_required()
+def holiday_list(request, school_id=None):
+    user = request.user
+
+    if user.role == 'school_admin':
+        school_id = request.session.get('school_id')
+        if not school_id:
+            return HttpResponseBadRequest("No school assigned to your account.")
+
+    elif user.role == 'admin':
+        if not school_id:
+            return HttpResponseBadRequest("Please provide a school to view.")
+    else:
+        return HttpResponseForbidden("Access Denied.")
+
+    school = get_object_or_404(School, id=school_id)
+
+    holidays = Holiday.objects.filter(school=school).order_by('start_date', 'end_date')
+
+    return render(request, 'holiday/holiday_list.html', {
+        'holidays': holidays,
+        'school': school,
+    })
+
+
+# Add a new holiday
+@login_required()
+def add_holiday(request, school_id):
+    school = get_object_or_404(School, id=school_id)
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if name and start_date and end_date:
+            if start_date > end_date:
+                messages.error(request, "Start date cannot be after end date.")
+            else:
+                Holiday.objects.create(
+                    school=school,
+                    name=name,
+                    start_date=start_date,
+                    end_date=end_date
+                )
+                messages.success(request, "Holiday added successfully.")
+                return redirect('holidays', school_id=school.id)
+        else:
+            messages.error(request, "All fields are required.")
+
+    return render(request, 'holiday/add_holiday.html', {'school': school})
+
+
+# Edit an existing holiday
+@login_required()
+def edit_holiday(request, id):
+    holiday = get_object_or_404(Holiday, id=id)
+    school = holiday.school
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if not (name and start_date and end_date):
+            messages.error(request, "All fields are required.")
+        elif start_date > end_date:
+            messages.error(request, "Start date cannot be after end date.")
+        else:
+            holiday.name = name
+            holiday.start_date = start_date
+            holiday.end_date = end_date
+            holiday.save()
+
+            messages.success(request, "Holiday updated successfully.")
+            return redirect('holidays', school_id=school.id)
+
+    return render(request, 'holiday/edit_holiday.html', {'holiday': holiday, 'school': school})
+
+
+# Delete a holiday
+@login_required()
+def delete_holiday(request, id):
+    holiday = get_object_or_404(Holiday, id=id)
+
+    if request.method == "POST":
+        holiday_name = holiday.name
+        school_id = holiday.school.id
+        holiday.delete()
+        messages.success(request, f"Holiday '{holiday_name}' has been successfully deleted.")
+        return redirect('holidays', school_id=school_id)
+
+    messages.error(request, "Invalid request method.")
+    return redirect('holidays', school_id=holiday.school.id)
 
 
 # User management views

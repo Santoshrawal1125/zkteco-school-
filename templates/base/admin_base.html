@@ -84,6 +84,13 @@
                         </a>
                         {% endif %}
 
+                        {% if not user.is_superuser %}
+                        <a class="nav-link" href="{% url 'holidays' %}">
+                             <div class="sb-nav-link-icon"><i class="fas fa-calendar-day"></i></div>
+                            Holidays
+                        </a>
+                        {% endif %}
+
                         {% if user.is_superuser %}
                         <a class="nav-link" href="{% url 'user_list'%}">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>

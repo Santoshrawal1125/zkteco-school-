@@ -1,0 +1,44 @@
+{% extends "base/admin_base.html" %}
+{% block title %}Add Holiday{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <img src="https://img.icons8.com/color/64/calendar--v1.png" alt="Holiday Icon" class="mb-3">
+        <h2 class="fw-bold">Add Holiday for {{ school.name }}</h2>
+        <p class="text-muted mb-0">Fill the form below to add a new holiday.</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Holiday Name</label>
+                    <input type="text" class="form-control" name="name" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" name="start_date" id="start_date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" name="end_date" id="end_date" required>
+                </div>
+                <button type="submit" class="btn btn-success">Add Holiday</button>
+                <a href="{% url 'holidays' school.id %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
